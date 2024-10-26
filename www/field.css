@@ -1,17 +1,11 @@
-body{
-    margin: 2.5%;
-}
-.canvas-container {
-    display: flex;
-    justify-content: center;
-}
-canvas {
-    width: 80vmin;
-    height: 80vmin;
-    background-color: aquamarine;
-}
-
 @media (orientation:portrait) {
+    body{
+        margin: 2.5%;
+    }
+    .canvas-container {
+        display: flex;
+        justify-content: center;
+    }
     .buttons-container{
         height: 5vmin;
         display: flex;
@@ -20,9 +14,33 @@ canvas {
         align-items: stretch;
         margin: 2.5% 0;
     }
-    .button{
-        background-color: lightcoral;
-        width: 10vmin;
-        height: 10vmin;
+} 
+@media (orientation:landscape) {
+    body{
+        display: flex;
+        margin: 2.5%;
+        vertical-align: top;
+        justify-content: center;
     }
+    .canvas-container {
+        display: inline-flex;
+    }
+
+    .buttons-container{
+        height: 80vmin;
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: space-around;
+        margin: 0 2.5%;
+    }
+}
+.button{
+    background-color: lightcoral;
+    width: 10vmin;
+    height: 10vmin;
+}
+canvas {
+    width: 80vmin;
+    height: 80vmin;
+    background-color: aquamarine;
 }
