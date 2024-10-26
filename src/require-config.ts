@@ -3,4 +3,4 @@ require.config({
     paths: {
     }
 });
-require(['../typescript/main']); 
+require(['../src/main']); 
