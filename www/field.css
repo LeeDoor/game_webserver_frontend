@@ -1,0 +1,28 @@
+body{
+    margin: 2.5%;
+}
+.canvas-container {
+    display: flex;
+    justify-content: center;
+}
+canvas {
+    width: 80vmin;
+    height: 80vmin;
+    background-color: aquamarine;
+}
+
+@media (orientation:portrait) {
+    .buttons-container{
+        height: 5vmin;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: stretch;
+        margin: 2.5% 0;
+    }
+    .button{
+        background-color: lightcoral;
+        width: 10vmin;
+        height: 10vmin;
+    }
+}
