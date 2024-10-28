@@ -1,7 +1,4 @@
 @media (orientation:portrait) {
-    body{
-        margin: 2.5%;
-    }
     .canvas-container {
         display: flex;
         justify-content: center;
@@ -18,7 +15,6 @@
 @media (orientation:landscape) {
     body{
         display: flex;
-        margin: 2.5%;
         vertical-align: top;
         justify-content: center;
     }
@@ -33,6 +29,9 @@
         justify-content: space-around;
         margin: 0 2.5%;
     }
+}
+body{
+    margin: 2.5%;
 }
 .button{
     background-color: lightcoral;
