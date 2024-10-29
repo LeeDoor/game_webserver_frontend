@@ -18,7 +18,7 @@ abobus.addEventListener("load", function (e) {
         setTimeout(function(){
             ctx.clearRect(0,0,canvas.width, canvas.height);
             viewport.position = new Vector2(i * 100, i * 100);
-            viewport.drawImage(abobus, new Vector2(0, 0), new Vector2(500 + i * 100, 600)); 
+            viewport.drawImage(abobus, new Vector2(0, 0)); 
         },i * 1000);
     }
 });
