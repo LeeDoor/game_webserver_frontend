@@ -6,5 +6,6 @@
         "preserveConstEnums": true,
         "outDir": "www"
     },
+    "target": "es2016",
     "include": ["src/**/*"],
   }

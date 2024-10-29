@@ -11,6 +11,9 @@ export class Viewport {
         this.ctx = canvas.getContext('2d');
         this.scale = 0.5;
     }
+    clearScreen(){
+        this.ctx.clearRect(0, 0, this.size.x, this.size.y);
+    }
     drawImage(image: HTMLImageElement, position: Vector2, size: Vector2 = new Vector2(0, 0)) {
         if(size.x == 0 && size.y == 0) {
             size.x = image.width;
