@@ -1,6 +1,7 @@
 import * as Screen from "./canvas.js";
 import {Viewport} from "./viewport.js";
 import {Vector2} from "./vector2.js";
+import {Controller} from "./controller.js";
 
 export class Game {
     objects: HTMLImageElement[];
@@ -18,6 +19,7 @@ export class Game {
     public start(){
         this.prevTime = document.timeline.currentTime.valueOf() as number;
         this.viewport = new Viewport(Screen.canvas);
+        this.captureControls();
         requestAnimationFrame(this.loop);
     };
     private draw(){
@@ -41,4 +43,8 @@ export class Game {
             this.ticks -= 1000;
         }
     };
+    
+    captureControls() {
+        new Controller().captureMovement(()=>{console.log("aboba");});
+    }
 }
