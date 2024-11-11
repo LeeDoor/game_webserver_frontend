@@ -2,6 +2,7 @@ import * as Screen from "./canvas.js";
 import {Viewport} from "./viewport.js";
 import {Vector2} from "./vector2.js";
 import {Controller} from "./controller.js";
+import {Direction} from "./direction.js";
 
 export class Game {
     objects: HTMLImageElement[];
@@ -16,11 +17,11 @@ export class Game {
         this.objects[0].src = "abobus.png";
         this.prevTime = 0;
     }
-    public start(){
+    start(){
         this.prevTime = document.timeline.currentTime.valueOf() as number;
         this.viewport = new Viewport(Screen.canvas);
         this.captureControls();
-        requestAnimationFrame(this.loop);
+        requestAnimationFrame(()=>this.loop(this.prevTime));
     };
     private draw(){
         this.viewport.clearScreen();
@@ -34,17 +35,28 @@ export class Game {
         this.draw();
         this.prevTime = timestamp;
 
-        requestAnimationFrame(this.loop);
+        requestAnimationFrame((ts)=> this.loop(ts));
     };
     private update(timestamp : number){
-        if(this.ticks > 1000) {
-            this.viewport.position.x += 50;
-            this.viewport.position.y += 50;
-            this.ticks -= 1000;
-        }
     };
     
     captureControls() {
-        new Controller().captureMovement(()=>{console.log("aboba");});
+        new Controller().captureMovement((dir : Direction)=>{
+            switch(dir) {
+                case Direction.Up:
+                    this.viewport.position.y -= 50;
+                    break;
+                case Direction.Right:
+                    this.viewport.position.x += 50;
+                    break;
+                case Direction.Down:
+                    this.viewport.position.y += 50;
+                    break;
+                case Direction.Left:
+                    this.viewport.position.x -= 50;
+                    break;
+
+            }
+        });
     }
 }

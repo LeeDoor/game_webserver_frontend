@@ -3,9 +3,16 @@ import { Direction } from "./direction.js"
 export type MovingFunction = (direction : Direction) => void;
 export class Controller {
     captureMovement(func : MovingFunction) {
-        document.addEventListener("keydown", function (e : KeyboardEvent) {
-            if (e.code == 'KeyW' && (e.ctrlKey || e.metaKey)) {
-                func(Direction.Up);
+        document.addEventListener("keydown", function (e : KeyboardEvent) {        
+            switch (e.code){
+                case 'KeyW':
+                    return func(Direction.Up);
+                case 'KeyD':
+                    return func(Direction.Right);
+                case 'KeyS':
+                    return func(Direction.Down);
+                case 'KeyA':
+                    return func(Direction.Left);
             }
         });
     }
