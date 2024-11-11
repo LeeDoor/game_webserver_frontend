@@ -27,17 +27,20 @@ export class Game {
         this.viewport.clearScreen();
         for(let obj of this.objects){
             this.viewport.drawImage(obj, new Vector2(0, 0));
+            this.viewport.drawImage(obj, new Vector2(500, 0));
+            this.viewport.drawImage(obj, new Vector2(100, 600));
         }
     };
     private loop(timestamp : number){
         this.ticks += timestamp - this.prevTime;
-        this.update(timestamp);
+        this.update(timestamp - this.prevTime);
         this.draw();
         this.prevTime = timestamp;
 
         requestAnimationFrame((ts)=> this.loop(ts));
     };
     private update(timestamp : number){
+        this.viewport.update(timestamp);
     };
     
     captureControls() {
@@ -50,12 +53,11 @@ export class Game {
                     this.viewport.position.x += 50;
                     break;
                 case Direction.Down:
-                    this.viewport.position.y += 50;
+                    this.viewport.shake();
                     break;
                 case Direction.Left:
                     this.viewport.position.x -= 50;
                     break;
-
             }
         });
     }
