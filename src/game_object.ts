@@ -1,5 +1,4 @@
-import { IDrawable } from "./drawable.js"
-import { IUpdateable } from "./updateable.js"
+import { IDrawable, IUpdateable } from "./types.js"
 import { Viewport } from "./viewport.js"
 import { Vector2 } from "./vector2.js"
 

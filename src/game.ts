@@ -2,7 +2,7 @@ import * as Screen from "./canvas.js";
 import {Viewport} from "./viewport.js";
 import {Vector2} from "./vector2.js";
 import {Controller} from "./controller.js";
-import {Direction} from "./direction.js";
+import {Direction} from "./types.js";
 import {Field} from "./field.js";
 
 export class Game {

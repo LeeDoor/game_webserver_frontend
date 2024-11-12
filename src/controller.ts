@@ -1,4 +1,4 @@
-import { Direction } from "./direction.js"
+import { Direction } from "./types.js"
 
 export type MovingFunction = (direction : Direction) => void;
 export class Controller {
