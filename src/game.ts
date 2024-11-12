@@ -3,30 +3,32 @@ import {Viewport} from "./viewport.js";
 import {Vector2} from "./vector2.js";
 import {Controller} from "./controller.js";
 import {Direction} from "./types.js";
-import {Field} from "./field.js";
+import {Grid} from "./grid.js";
+import {DrawManager} from "./draw_manager.js";
 
 export class Game {
     viewport: Viewport;
-    field : Field;
+    grid : Grid;
     prevTime: number;
-    readonly framerate = 30; // request animation frame is max 60
+    drawManager : DrawManager;
+    readonly framerate = 60; // request animation frame is max 60
     readonly frameInterval : number;
 
     constructor(){
+        this.prevTime = document.timeline.currentTime.valueOf() as number;
         this.prevTime = 0;
-        this.field = new Field();
+        this.grid = new Grid();
         this.frameInterval = 1000 / this.framerate;
     }
     public start(){
-        this.prevTime = document.timeline.currentTime.valueOf() as number;
         this.viewport = new Viewport(Screen.canvas);
+        this.drawManager = new DrawManager(this.viewport);
         this.captureControls();
-        this.field.init();
         requestAnimationFrame(()=>this.loop(this.prevTime));
     };
     private draw(){
         this.viewport.clearScreen();
-        this.field.draw(this.viewport);
+        this.drawManager.drawGrid(this.grid);
     };
     private loop(timestamp : number){
         if (timestamp - this.prevTime > this.frameInterval){
@@ -38,20 +40,19 @@ export class Game {
     };
     private update(timestamp : number){
         this.viewport.update(timestamp);
-        this.field.update(timestamp);
     };
     
     private captureControls() {
         new Controller().captureMovement((dir : Direction)=>{
             switch(dir) {
                 case Direction.Up:
-                    this.viewport.position.y -= 50;
+                    this.viewport.scale += 0.1;
                     break;
                 case Direction.Right:
                     this.viewport.position.x += 50;
                     break;
                 case Direction.Down:
-                    this.viewport.shake();
+                    this.viewport.scale -= 0.1;
                     break;
                 case Direction.Left:
                     this.viewport.position.x -= 50;

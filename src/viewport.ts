@@ -1,5 +1,6 @@
 import {Vector2} from "./vector2.js";
 import {Sprite} from "./sprite_manager.js";
+import {Grid} from "./grid.js";
 
 export enum ViewportState{
     Idle,
@@ -21,7 +22,7 @@ export class Viewport {
         this.position = position;
         this.size = new Vector2(canvas.width, canvas.height);
         this.ctx = canvas.getContext('2d');
-        this.scale = 0.5;
+        this.scale = 1;
         this.shift = new Vector2(0,0);
         this.state = ViewportState.Idle;
     }
@@ -48,12 +49,19 @@ export class Viewport {
         this.state = ViewportState.Shake;
         this.animationtime = this.shaketime;
     }
-    drawImage(sprite: Sprite, position: Vector2) {
-        this.ctx.drawImage(sprite.img, 
-            position.x - this.position.x + this.shift.x, 
-            position.y - this.position.y + this.shift.y, 
-            sprite.img.width * this.scale, 
-            sprite.img.height * this.scale
+    private globalToLocalPos(position: Vector2) {
+        return new Vector2(
+            this.scale * (position.x - this.position.x + this.shift.x), 
+            this.scale * (position.y - this.position.y + this.shift.y)
         );
     }
-}
+
+    drawImage(sprite: Sprite, position: Vector2, size?: Vector2) {
+        let vpp = this.globalToLocalPos(position);
+        this.ctx.drawImage(sprite.img, 
+            vpp.x, vpp.y,
+            (size ? size.x : sprite.img.width) * this.scale, 
+            (size ? size.y : sprite.img.height) * this.scale
+        );
+    }
+}   
