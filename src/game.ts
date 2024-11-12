@@ -3,44 +3,42 @@ import {Viewport} from "./viewport.js";
 import {Vector2} from "./vector2.js";
 import {Controller} from "./controller.js";
 import {Direction} from "./direction.js";
+import {Field} from "./field.js";
 
 export class Game {
-    objects: HTMLImageElement[];
     viewport: Viewport;
-    ticks: number;
+    field : Field;
     prevTime: number;
+    readonly framerate = 30; // request animation frame is max 60
+    readonly frameInterval : number;
 
     constructor(){
-        this.ticks = 0;
-        this.objects = [];
-        this.objects.push(new Image(600, 600));
-        this.objects[0].src = "abobus.png";
         this.prevTime = 0;
+        this.field = new Field();
+        this.frameInterval = 1000 / this.framerate;
     }
     public start(){
         this.prevTime = document.timeline.currentTime.valueOf() as number;
         this.viewport = new Viewport(Screen.canvas);
         this.captureControls();
+        this.field.init();
         requestAnimationFrame(()=>this.loop(this.prevTime));
     };
     private draw(){
         this.viewport.clearScreen();
-        for(let obj of this.objects){
-            this.viewport.drawImage(obj, new Vector2(0, 0));
-            this.viewport.drawImage(obj, new Vector2(500, 0));
-            this.viewport.drawImage(obj, new Vector2(100, 600));
-        }
+        this.field.draw(this.viewport);
     };
     private loop(timestamp : number){
-        this.ticks += timestamp - this.prevTime;
-        this.update(timestamp - this.prevTime);
-        this.draw();
-        this.prevTime = timestamp;
-
+        if (timestamp - this.prevTime > this.frameInterval){
+            this.update(timestamp - this.prevTime);
+            this.draw();
+            this.prevTime = timestamp;
+        }
         requestAnimationFrame((ts)=> this.loop(ts));
     };
     private update(timestamp : number){
         this.viewport.update(timestamp);
+        this.field.update(timestamp);
     };
     
     private captureControls() {
