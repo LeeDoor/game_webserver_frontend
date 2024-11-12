@@ -1,4 +1,5 @@
 import {Vector2} from "./vector2.js";
+import {Sprite} from "./sprite_manager.js";
 
 export enum ViewportState{
     Idle,
@@ -47,16 +48,12 @@ export class Viewport {
         this.state = ViewportState.Shake;
         this.animationtime = this.shaketime;
     }
-    drawImage(image: HTMLImageElement, position: Vector2, size: Vector2 = new Vector2(0, 0)) {
-        if(size.x == 0 && size.y == 0) {
-            size.x = image.width;
-            size.y = image.height;
-        }
-        this.ctx.drawImage(image, 
+    drawImage(sprite: Sprite, position: Vector2) {
+        this.ctx.drawImage(sprite.img, 
             position.x - this.position.x + this.shift.x, 
             position.y - this.position.y + this.shift.y, 
-            size.x * this.scale, 
-            size.y * this.scale
+            sprite.img.width * this.scale, 
+            sprite.img.height * this.scale
         );
     }
 }
