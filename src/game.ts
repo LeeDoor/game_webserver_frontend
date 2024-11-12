@@ -17,7 +17,7 @@ export class Game {
         this.objects[0].src = "abobus.png";
         this.prevTime = 0;
     }
-    start(){
+    public start(){
         this.prevTime = document.timeline.currentTime.valueOf() as number;
         this.viewport = new Viewport(Screen.canvas);
         this.captureControls();
@@ -43,7 +43,7 @@ export class Game {
         this.viewport.update(timestamp);
     };
     
-    captureControls() {
+    private captureControls() {
         new Controller().captureMovement((dir : Direction)=>{
             switch(dir) {
                 case Direction.Up:

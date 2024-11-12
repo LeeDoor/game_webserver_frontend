@@ -6,15 +6,15 @@ export enum ViewportState{
 }
 
 export class Viewport {
-    readonly shaketime = 1000;
-    animationtime = 0;
+    readonly shaketime = 1000; // const time for shaking animation
+    animationtime = 0; // ticks for some animation. 0 means that animation stopped
 
-    position: Vector2;
-    size: Vector2;
-    readonly ctx: CanvasRenderingContext2D;
-    scale: number;
-    shift: Vector2;
-    state: ViewportState;
+    position: Vector2; // position of viewport on global field
+    size: Vector2; // size of this viewport (canvas)
+    readonly ctx: CanvasRenderingContext2D; // context to draw elements
+    scale: number; // scaling
+    shift: Vector2; // shift inside canvas. used for animations like shaking, avoiding moving the canvas itself
+    state: ViewportState; // current animation of viewport
 
     constructor(canvas: HTMLCanvasElement, position: Vector2 = new Vector2(0, 0)) {
         this.position = position;
@@ -31,7 +31,7 @@ export class Viewport {
         this.animationtime -= timestamp;
         if(this.state == ViewportState.Shake){ 
             let maxShift = 200;
-            // function defines curve of shakeness
+            // function defines the curve of shakeness
             let timeDep = (1 + this.shaketime/10 - this.animationtime/10);
             this.shift.x = (Math.random()-0.5) * 2 * maxShift / timeDep;
             this.shift.y = (Math.random()-0.5) * 2 * maxShift / timeDep;

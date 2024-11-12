@@ -2,7 +2,7 @@ import { Direction } from "./direction.js"
 
 export type MovingFunction = (direction : Direction) => void;
 export class Controller {
-    captureMovement(func : MovingFunction) {
+    public captureMovement(func : MovingFunction) {
         document.addEventListener("keydown", function (e : KeyboardEvent) {        
             switch (e.code){
                 case 'KeyW':
