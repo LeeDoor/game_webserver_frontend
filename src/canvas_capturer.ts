@@ -1,7 +1,8 @@
 import { Direction } from "./types.js"
 
 export type MovingFunction = (direction : Direction) => void;
-export class Controller {
+export type ResizeFunction = () => void;
+export class CanvasCapturer {
     public captureMovement(func : MovingFunction) {
         document.addEventListener("keydown", function (e : KeyboardEvent) {        
             switch (e.code){
@@ -15,5 +16,8 @@ export class Controller {
                     return func(Direction.Left);
             }
         });
+    }
+    public captureResize(func: ResizeFunction) {
+        document.addEventListener("resize", func);
     }
 }
