@@ -15,7 +15,15 @@ export interface IDrawableGrid {
     getCellPosition(x: number, y: number) : Vector2;
 }
 
-export class Grid implements IDrawableGrid {
+export interface IGrid {
+    size: Vector2;
+    move_number: number;
+    now_turn: string;
+    objects : GameObject[]; 
+    state: string;
+}
+
+export class Grid implements IDrawableGrid, IGrid {
     size: Vector2;
     move_number: number;
     now_turn: string;
