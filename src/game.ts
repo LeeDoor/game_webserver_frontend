@@ -4,7 +4,7 @@ import {Vector2} from "./vector2.js";
 import { CanvasCapturer } from "./canvas_capturer.js";
 import {Direction} from "./types.js";
 import {Grid} from "./grid.js";
-import { NetworkManager } from "./network_manager.js";
+import { AccountManager } from "./account_manager.js";
 
 export class Game {
     viewport: Viewport;
@@ -22,7 +22,7 @@ export class Game {
         this.viewport = new Viewport(Screen.canvas);
         this.grid = new Grid(this.viewport);
         this.captureEvents();
-        new NetworkManager().login();        
+        new AccountManager().login();        
         requestAnimationFrame(()=>this.loop(this.prevTime));
     };
     private draw(){
