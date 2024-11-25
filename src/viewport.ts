@@ -64,4 +64,12 @@ export class Viewport {
             (size ? size.y : sprite.img.height) * this.scale
         );
     }
+
+    drawText(text: string, position?: Vector2, size?: number, color?: string) {
+        let vpp = position ? this.globalToLocalPos(position) : new Vector2(0);
+
+        this.ctx.fillStyle = color ?? "white";  
+        this.ctx.font = (size ?? 14) + "px serif";
+        this.ctx.fillText(text, vpp.x, vpp.y, this.size.x);
+    }
 }   

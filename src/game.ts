@@ -4,12 +4,21 @@ import { EventCapturer } from "./event_capturer.js";
 import {Direction} from "./types.js";
 import {Grid} from "./grid.js";
 import { AccountManager } from "./account_manager.js";
+import { GameScreen, LoginScreen } from "./game_screen.js";
+
+enum GameState {
+    Login,
+    Queue,
+    Match
+}
 
 export class Game {
     viewport: Viewport;
     grid : Grid;
     prevTime: number;
     account: AccountManager;
+    state: GameState;
+    screens: Record<GameState, GameScreen>;
     readonly framerate = 60; // request animation frame is max 60
     readonly frameInterval : number;
 
@@ -19,15 +28,19 @@ export class Game {
         this.account = new AccountManager();
     }
     public start(){
-        this.viewport = new Viewport(Screen.canvas);
+        this.state = GameState.Login;
+        this.screens[GameState.Login] = new LoginScreen(Screen.canvas);
+        // this.screens[GameState.Queue] = new LoginScreen(Screen.canvas);
+        // this.screens[GameState.Match] = new LoginScreen(Screen.canvas);
+
         this.grid = new Grid(this.viewport);
         this.captureEvents();
-        this.account.connect();        
+        // this.account.connect();        
         requestAnimationFrame(()=>this.loop(this.prevTime));
     };
     private draw(){
-        this.viewport.clearScreen();
-        this.grid.draw(this.viewport);
+        this.screens[this.state].clear();
+        this.screens[this.state].draw();
     };
     private loop(timestamp : number){
         if (timestamp - this.prevTime > this.frameInterval){
@@ -38,7 +51,7 @@ export class Game {
         requestAnimationFrame((ts)=> this.loop(ts));
     };
     private update(timestamp : number){
-        this.viewport.update(timestamp);
+        this.screens[this.state].update(timestamp);
     };
     
     private captureEvents() {
