@@ -25,28 +25,31 @@ export class AccountManager {
         localStorage.setItem("password", ad.password);
         if (ad.token) 
             localStorage.setItem("token", ad.token);
+        this.ld = ad;
         return true;
     }
 
     async connect() : Promise<boolean> {
         let parsed = this.parseData();
-        if(parsed) {
-            if(parsed.token && this.network.validateToken(parsed.token)) 
-                return this.saveData(parsed);
+        if(parsed != null) {
+            this.ld = parsed;
+            if(this.ld.token && this.network.validateToken(this.ld.token)) 
+                return this.saveData(this.ld);
         }
         else{
-            parsed.login = this.generatedLogin();
-            parsed.password = this.generatedPassword();
+            this.ld = new AccountData();
+            this.ld.login = this.generatedLogin();
+            this.ld.password = this.generatedPassword();
         }
-        let token : string | null = await this.network.login(parsed);
+        let token : string | null = await this.network.login(this.ld);
         if(token) {
-            parsed.token = token;
-            return this.saveData(parsed);
+            this.ld.token = token;
+            return this.saveData(this.ld);
         }
-        let registered : boolean = await this.network.register(parsed);
+        let registered : boolean = await this.network.register(this.ld);
         if (registered) {
-            parsed.token = await this.network.login(parsed);
-            return parsed.token == null ? false : this.saveData(parsed);
+            this.ld.token = await this.network.login(this.ld);
+            return this.ld.token == null ? false : this.saveData(this.ld);
         }
         return false;
     }
