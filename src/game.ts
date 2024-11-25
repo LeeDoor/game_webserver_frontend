@@ -22,7 +22,7 @@ export class Game {
         this.viewport = new Viewport(Screen.canvas);
         this.grid = new Grid(this.viewport);
         this.captureEvents();
-        new AccountManager().login();        
+        new AccountManager().connect();        
         requestAnimationFrame(()=>this.loop(this.prevTime));
     };
     private draw(){

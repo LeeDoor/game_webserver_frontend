@@ -1,11 +1,7 @@
-class AccountData {
-    login: string;
-    password: string;
-    token?: string;
-}
-
+import { AccountData, NetworkManager } from "./network_manager.js";
 
 export class AccountManager {
+    network = new NetworkManager();
     ld = new AccountData();
 
     generatedLogin() {return "guest_abobus_" + Math.ceil(Math.random() * 1000000)}
@@ -24,26 +20,33 @@ export class AccountManager {
         return (login && password) ?  {login, password, token} : null;
     }
 
-    
-    connect() : boolean {
+    saveData(ad: AccountData) {
+        localStorage.setItem("login", ad.login);
+        localStorage.setItem("password", ad.password);
+        if (ad.token) 
+            localStorage.setItem("token", ad.token);
+        return true;
+    }
+
+    async connect() : Promise<boolean> {
         let parsed = this.parseData();
         if(parsed) {
             if(parsed.token && this.network.validateToken(parsed.token)) 
-                return true;
+                return this.saveData(parsed);
         }
         else{
             parsed.login = this.generatedLogin();
             parsed.password = this.generatedPassword();
         }
-        let token : string | null = this.network.login(parsed);
+        let token : string | null = await this.network.login(parsed);
         if(token) {
             parsed.token = token;
-            return true;
+            return this.saveData(parsed);
         }
-        let registered : boolean = this.network.register(parsed);
+        let registered : boolean = await this.network.register(parsed);
         if (registered) {
-            parsed.token = this.network.login(parsed);
-            return parsed.token == null;
+            parsed.token = await this.network.login(parsed);
+            return parsed.token == null ? false : this.saveData(parsed);
         }
         return false;
     }
