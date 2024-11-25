@@ -33,7 +33,6 @@ export class Game {
             [GameState.Queue]: new LoginScreen(Screen.canvas),
             [GameState.Match]: new LoginScreen(Screen.canvas),
         };
-
         this.captureEvents();
         // this.account.connect();        
         requestAnimationFrame(()=>this.loop(this.prevTime));

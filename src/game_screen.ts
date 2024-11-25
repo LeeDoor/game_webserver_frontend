@@ -19,7 +19,5 @@ export class LoginScreen implements GameScreen {
     }
     draw(): void {
         this.viewport.drawText("BORIS IS SO OMEGA ABOBUS");
-        console.log("AAA");
     }
-
 }
