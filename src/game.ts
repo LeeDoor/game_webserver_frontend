@@ -1,28 +1,28 @@
 import * as Screen from "./canvas.js";
 import {Viewport} from "./viewport.js";
-import {Vector2} from "./vector2.js";
-import { CanvasCapturer } from "./canvas_capturer.js";
+import { EventCapturer } from "./event_capturer.js";
 import {Direction} from "./types.js";
 import {Grid} from "./grid.js";
-import { NetworkManager } from "./network_manager.js";
+import { AccountManager } from "./account_manager.js";
 
 export class Game {
     viewport: Viewport;
     grid : Grid;
     prevTime: number;
+    account: AccountManager;
     readonly framerate = 60; // request animation frame is max 60
     readonly frameInterval : number;
 
     constructor(){
-        this.prevTime = document.timeline.currentTime.valueOf() as number;
         this.prevTime = 0;
         this.frameInterval = 1000 / this.framerate;
+        this.account = new AccountManager();
     }
     public start(){
         this.viewport = new Viewport(Screen.canvas);
         this.grid = new Grid(this.viewport);
         this.captureEvents();
-        new NetworkManager().login();        
+        this.account.connect();        
         requestAnimationFrame(()=>this.loop(this.prevTime));
     };
     private draw(){
@@ -42,7 +42,7 @@ export class Game {
     };
     
     private captureEvents() {
-        let cc = new CanvasCapturer();
+        let cc = new EventCapturer();
         cc.captureMovement((dir : Direction)=>{
             switch(dir) {
                 case Direction.Up:

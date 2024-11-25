@@ -1,30 +1,47 @@
-class LoginData {
+export class AccountData {
     login: string;
     password: string;
     token?: string;
 }
 
-let ld = new LoginData();
-
 export class NetworkManager {
-    generatedLogin() {return "guest_abobus_" + Math.ceil(Math.random() * 1000000)}
-    parseData() {
-        ld.login = localStorage.getItem("login") ?? this.generatedLogin();
-        if(localStorage.getItem("password")) {
-            ld.password = localStorage.getItem("password");
-        }
-        else{ 
-            ld.password = "";
-            let charset = "qwertyuiopasdfghjklzxcvbnm!@#$%^&*()";
-            for (let i = 0; i < 15; ++i) {
-                ld.password += charset[Math.random() * 100 % charset.length];
-            }
-        }
-        localStorage.setItem("login", ld.login);
-        localStorage.setItem("password", ld.password);
-    }
-    login(){
-        this.getLoginData();
+    readonly SERVER_URL = "http://localhost:8000";
 
+    async login(ad: AccountData) : Promise<string | null> {
+        let response = await fetch(this.SERVER_URL + '/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ad)
+        });    
+        return response.ok ? (await response.json()).token : null;
     }
-} 
+
+    async register(ad: AccountData) : Promise<boolean> {
+        let res : boolean;
+        await fetch(this.SERVER_URL + '/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ad)
+        }).then(response=>{
+            res = response.ok;    
+        });    
+        return res;
+    }
+    async validateToken(token: string) : Promise<boolean> {
+        let res : boolean = false; // true if login is valid
+        await fetch(this.SERVER_URL + '/api/profile', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization':'Bearer ' + token
+            }
+        }).then(response=>{
+            res = response.ok;
+        });
+        return res;
+    }
+}

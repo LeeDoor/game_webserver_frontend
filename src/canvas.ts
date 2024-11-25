@@ -8,8 +8,8 @@ export function loadCanvas(after?: ()=>void) {
         canvas = document.getElementById("canvas") as HTMLCanvasElement;
         ctx  = canvas.getContext("2d");
         style = getComputedStyle(canvas);
-        canvas.width = parseFloat(style.width);
-        canvas.height = parseFloat(style.height);
+        canvas.width = parseFloat(style.width) * 3;
+        canvas.height = parseFloat(style.height) * 3;
         if(after) after();
     });
 }

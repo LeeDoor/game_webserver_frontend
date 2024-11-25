@@ -2,7 +2,7 @@ import { Direction } from "./types.js"
 
 export type MovingFunction = (direction : Direction) => void;
 export type ResizeFunction = () => void;
-export class CanvasCapturer {
+export class EventCapturer {
     public captureMovement(func : MovingFunction) {
         document.addEventListener("keydown", function (e : KeyboardEvent) {        
             switch (e.code){
