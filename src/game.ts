@@ -4,10 +4,13 @@ import { EventCapturer } from "./event_capturer.js";
 import {Direction} from "./types.js";
 import {Grid} from "./grid.js";
 import { AccountManager } from "./account_manager.js";
-import * as GScreens from "./game_screen.js";
+import {LoginScreen} from "./login_screen.js";
+import { GameScreen,  FRAME_INTERVAL } from "./game_screen.js";
+import { MainMenuScreen } from "./main_menu_screen.js";
 
 enum GameState {
     Login,
+    MainMenu,
     Queue,
     Match
 }
@@ -15,21 +18,25 @@ enum GameState {
 export class Game {
     grid : Grid;
     prevTime: number;
-    account: AccountManager;
     state: GameState;
-    screens: {[key in GameState]: GScreens.GameScreen};
+    readonly account: AccountManager;
+    readonly screens: {[key in GameState]: GameScreen};
 
     constructor(){
         this.prevTime = 0;
         this.account = new AccountManager();
+        this.screens = {
+            [GameState.Login]: new LoginScreen(),
+            [GameState.MainMenu]: new MainMenuScreen(),
+            [GameState.Queue]: new MainMenuScreen(),
+            [GameState.Match]: new LoginScreen(),
+        };
     }
     public start(){
+        for(const [_, value] of Object.entries(this.screens)) {
+            value.init(Screen.canvas);
+        }
         this.state = GameState.Login;
-        this.screens = {
-            [GameState.Login]: new GScreens.LoginScreen(Screen.canvas),
-            [GameState.Queue]: new GScreens.LoginScreen(Screen.canvas),
-            [GameState.Match]: new GScreens.LoginScreen(Screen.canvas),
-        };
         this.captureEvents();
         // this.account.connect();        
         requestAnimationFrame(()=>this.loop(this.prevTime));
@@ -39,7 +46,7 @@ export class Game {
         this.screens[this.state].draw();
     };
     private loop(timestamp : number){
-        if (timestamp - this.prevTime > GScreens.FRAME_INTERVAL){
+        if (timestamp - this.prevTime > FRAME_INTERVAL){
             this.update(timestamp - this.prevTime);
             this.draw();
             this.prevTime = timestamp;
