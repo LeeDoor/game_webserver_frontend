@@ -1,7 +1,4 @@
 import * as Screen from "./canvas.js";
-import {Viewport} from "./viewport.js";
-import { EventCapturer } from "./event_capturer.js";
-import {Direction} from "./types.js";
 import {Grid} from "./grid.js";
 import { AccountManager } from "./account_manager.js";
 import {LoginScreen} from "./login_screen.js";
@@ -36,9 +33,10 @@ export class Game {
         for(const [_, value] of Object.entries(this.screens)) {
             value.init(Screen.canvas);
         }
-        this.state = GameState.Login;
+        this.state = GameState.MainMenu;
         this.captureEvents();
-        // this.account.connect();        
+        // this.account.connect();    
+            
         requestAnimationFrame(()=>this.loop(this.prevTime));
     };
     private draw(){

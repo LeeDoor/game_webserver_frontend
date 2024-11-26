@@ -26,6 +26,11 @@ export class Viewport {
         this.shift = new Vector2(0,0);
         this.state = ViewportState.Idle;
     }
+
+    getFontString(fontSize: number) {
+        return fontSize + "px Kirang Haerang";
+    }
+
     clearScreen(){
         this.ctx.clearRect(0, 0, this.size.x, this.size.y);
     }
@@ -65,12 +70,32 @@ export class Viewport {
         );
     }
 
-    drawText(text: string, position?: Vector2, size?: number, color?: string) {
+    drawText(text: string, position?: Vector2, fitTo?: Vector2, color?: string) {
         let vpp = position ? this.globalToLocalPos(position) : new Vector2(0);
         this.ctx.fillStyle = color ?? "black";  
-        this.ctx.font = (size ?? 24) * 10 + "px Kirang Haerang";
+        this.ctx.font = this.getFontString(fitTo ? this.getFittedFontSize(text, fitTo) : 240);
         this.ctx.textBaseline = "middle";
         this.ctx.textAlign = "center";
         this.ctx.fillText(text, vpp.x, vpp.y, this.size.x);
+    }
+
+    drawRect(position: Vector2, size: Vector2, color: string) {
+        let vpp = this.globalToLocalPos(position);
+        let scaled = size.multed(this.scale);
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(vpp.x, vpp.y, scaled.x, scaled.y);
+    }
+
+    getFittedFontSize(text: string, fitTo: Vector2) : number {
+        let fontSize = 10;
+        const step = 10;
+        for(let i = 0; i < 100; ++i) {
+            this.ctx.font = this.getFontString(fontSize);
+            let measured = this.ctx.measureText(text);
+            let height = measured.actualBoundingBoxAscent + measured.actualBoundingBoxDescent;
+            if(measured.width > fitTo.x || height > fitTo.y) 
+                return fontSize - step;
+            fontSize += step;
+        }
     }
 }   

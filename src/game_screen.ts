@@ -2,9 +2,14 @@ import { Viewport } from "./viewport.js";
 export abstract class GameScreen {
     viewport: Viewport;
 
-    abstract update(timestamp: number): void;
+    update(timestamp: number): void {
+        this.viewport.update(timestamp);
+    }
     abstract draw(): void;
-    abstract clear(): void;
+    
+    clear(): void {
+        this.viewport.clearScreen();
+    }
 
     init(canvas: HTMLCanvasElement) {
         this.viewport = new Viewport(canvas);

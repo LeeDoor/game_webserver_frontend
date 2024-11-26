@@ -7,10 +7,11 @@ export enum Direction {
     Left
 }
 
-export interface IDrawable{
-    draw(vp: Viewport) : void;
+export abstract class AbstractDrawable {
+    abstract draw(vp: Viewport): void;
+    abstract recalculate(vp: Viewport): void;
 }
-export interface IUpdateable{
-    // timestamp: time since last update in ms
-    update(timestamp : number) : void;
+
+export abstract class AbstractAnimated extends AbstractDrawable { 
+    abstract update(timestamp : number) : void;
 }

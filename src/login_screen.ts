@@ -10,11 +10,8 @@ export class LoginScreen extends GameScreen {
         super();
         this.textAnimation = 0;
     }
-    clear(): void {
-        this.viewport.clearScreen();
-    }
     update(timestamp: number): void {
-        this.viewport.update(timestamp);
+        super.update(timestamp);
         this.intervalToAnimation -= timestamp;
         if (this.intervalToAnimation < 0) {
             this.textAnimation = (this.textAnimation + 1) % this.loginTexts.length;
@@ -23,6 +20,6 @@ export class LoginScreen extends GameScreen {
     }
     draw(): void {
         let logpos = this.viewport.size.multed(0.5, 0.3);
-        this.viewport.drawText(this.loginTexts[this.textAnimation], logpos, 28, "coral");
+        this.viewport.drawText(this.loginTexts[this.textAnimation], logpos, null, "coral");
     }
 }

@@ -1,47 +1,28 @@
 import { Viewport } from "./viewport.js"
-import { GameObject, Bomb } from "./game_object.js"
 import { Vector2 } from "./vector2.js"
 import { SpriteManager } from "./sprite_manager.js"
+import { AbstractDrawable } from "./types.js";
 
-export interface IDrawableGrid {
+export abstract class AbstractDrawableGrid extends AbstractDrawable {
     cellMargin : number; // margin between viewport borders and grid begining
     cellInnerMargin : number; // margin for each cell
     cellSize : number; // size of each cell in pixels
     gridSize: number; // size of whole grid side
     cellShift: number; // shift for each cell
 
-    draw(vp: Viewport): void;
-    recalculate(vp: Viewport): void;
-    getCellPosition(x: number, y: number) : Vector2;
+    abstract getCellPosition(x: number, y: number) : Vector2;
 }
 
-export interface IGrid {
+export class Grid extends AbstractDrawableGrid {
     size: Vector2;
     move_number: number;
     now_turn: string;
-    objects : GameObject[]; 
     state: string;
-}
-
-export class Grid implements IDrawableGrid, IGrid {
-    size: Vector2;
-    move_number: number;
-    now_turn: string;
-    objects : GameObject[]; 
-    state: string;
-    
-    cellMargin : number;
-    cellInnerMargin : number;
-    cellSize : number;
-    gridSize: number;
-    cellShift: number;
 
     constructor(vp: Viewport) {
+        super();
         this.size = new Vector2 (8,8);
         this.recalculate(vp);
-
-        this.objects = [];
-        this.objects.push(new Bomb(this as IDrawableGrid));
     }
 
     draw(vp: Viewport): void {
@@ -51,9 +32,6 @@ export class Grid implements IDrawableGrid, IGrid {
                     this.getCellPosition(x, y),
                     new Vector2(this.cellSize));
             }
-        }
-        for (let obj of this.objects) {
-            obj.draw(vp);
         }
     }
     recalculate(vp: Viewport): void {
