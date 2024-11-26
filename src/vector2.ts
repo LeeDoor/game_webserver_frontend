@@ -12,4 +12,7 @@ export class Vector2 {
     public length() {
         Math.sqrt(this.lengthSquare());
     }
+    public multed(nx: number, ny?: number) : Vector2 {
+        return new Vector2(this.x * nx, this.y * (ny ?? nx));
+    }
 }

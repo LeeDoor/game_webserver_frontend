@@ -68,8 +68,9 @@ export class Viewport {
     drawText(text: string, position?: Vector2, size?: number, color?: string) {
         let vpp = position ? this.globalToLocalPos(position) : new Vector2(0);
         this.ctx.fillStyle = color ?? "black";  
-        this.ctx.font = (size ?? 24) + "px bold serif";
-        this.ctx.textBaseline = "top";
+        this.ctx.font = (size ?? 24) * 10 + "px Kirang Haerang";
+        this.ctx.textBaseline = "middle";
+        this.ctx.textAlign = "center";
         this.ctx.fillText(text, vpp.x, vpp.y, this.size.x);
     }
 }   

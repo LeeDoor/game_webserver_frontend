@@ -4,7 +4,7 @@ import { EventCapturer } from "./event_capturer.js";
 import {Direction} from "./types.js";
 import {Grid} from "./grid.js";
 import { AccountManager } from "./account_manager.js";
-import { GameScreen, LoginScreen } from "./game_screen.js";
+import * as GScreens from "./game_screen.js";
 
 enum GameState {
     Login,
@@ -17,21 +17,18 @@ export class Game {
     prevTime: number;
     account: AccountManager;
     state: GameState;
-    screens: {[key in GameState]: GameScreen};
-    readonly framerate = 60; // request animation frame is max 60
-    readonly frameInterval : number;
+    screens: {[key in GameState]: GScreens.GameScreen};
 
     constructor(){
         this.prevTime = 0;
-        this.frameInterval = 1000 / this.framerate;
         this.account = new AccountManager();
     }
     public start(){
         this.state = GameState.Login;
         this.screens = {
-            [GameState.Login]: new LoginScreen(Screen.canvas),
-            [GameState.Queue]: new LoginScreen(Screen.canvas),
-            [GameState.Match]: new LoginScreen(Screen.canvas),
+            [GameState.Login]: new GScreens.LoginScreen(Screen.canvas),
+            [GameState.Queue]: new GScreens.LoginScreen(Screen.canvas),
+            [GameState.Match]: new GScreens.LoginScreen(Screen.canvas),
         };
         this.captureEvents();
         // this.account.connect();        
@@ -42,7 +39,7 @@ export class Game {
         this.screens[this.state].draw();
     };
     private loop(timestamp : number){
-        if (timestamp - this.prevTime > this.frameInterval){
+        if (timestamp - this.prevTime > GScreens.FRAME_INTERVAL){
             this.update(timestamp - this.prevTime);
             this.draw();
             this.prevTime = timestamp;
