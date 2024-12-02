@@ -30,6 +30,8 @@ export class AccountManager {
     }
 
     async connect() : Promise<boolean> {
+        await new Promise(resolve => setTimeout(resolve, 4000));
+        return true;
         let parsed = this.parseData();
         if(parsed != null) {
             this.ld = parsed;

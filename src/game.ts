@@ -14,13 +14,13 @@ export class Game {
 
     constructor(){
         this.prevTime = 0;
+        let redirectionFunc = (state: GameState) => {
+            this.redirectScreen(state)
+        };
+
         this.screens = {
-            [GameState.Login]: new LoginScreen((state: GameState) => {
-                this.redirectScreen(state)
-            }),
-            [GameState.MainMenu]: new MainMenuScreen((state: GameState) => {
-                this.redirectScreen(state)
-            }),
+            [GameState.Login]: new LoginScreen(redirectionFunc),
+            [GameState.MainMenu]: new MainMenuScreen(redirectionFunc),
         };
     }
     public start(){
@@ -49,6 +49,7 @@ export class Game {
     };
     
     private captureEvents() {
+        
     }
     private redirectScreen(toState: GameState){
         this.state = toState;
