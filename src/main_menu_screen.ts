@@ -1,5 +1,5 @@
 import { Button } from "./button.js";
-import { GameScreen } from "./game_screen.js";
+import { GameScreen, RedirectionMethod } from "./game_screen.js";
 import { Vector2 } from "./vector2.js";
 import { UIViewport } from "./ui_viewport.js";
 import { GameViewport } from "./game_viewport.js";
@@ -10,8 +10,8 @@ export class MainMenuScreen extends GameScreen {
 
     viewport: UIViewport;
 
-    constructor() {
-        super();
+    constructor(redirectionMethod: RedirectionMethod) {
+        super(redirectionMethod);
         this.buttons = [
             new Button(new Vector2(100), new Vector2(800, 400), "aboba", "red"),
         ];
