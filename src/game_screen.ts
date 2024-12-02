@@ -1,19 +1,21 @@
-import { Viewport } from "./viewport.js";
+import { BaseViewport } from "./base_viewport.js";
 export abstract class GameScreen {
-    viewport: Viewport;
+    viewports: BaseViewport[];
 
     update(timestamp: number): void {
-        this.viewport.update(timestamp);
+        for(let vp of this.viewports){
+            vp.update(timestamp);
+        }
     }
     abstract draw(): void;
     
     clear(): void {
-        this.viewport.clearScreen();
+        for(let vp of this.viewports){
+            vp.clearScreen();
+        }
     }
 
-    init(canvas: HTMLCanvasElement) {
-        this.viewport = new Viewport(canvas);
-    }
+    abstract init(canvas: HTMLCanvasElement) : void;  
 }
 export const FRAMERATE = 60; // request animation frame is max 60
 export const FRAME_INTERVAL = 1000 / FRAMERATE;

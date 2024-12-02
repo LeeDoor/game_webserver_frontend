@@ -1,6 +1,6 @@
 import { AbstractAnimated } from "./types.js";
 import { Vector2 } from "./vector2.js";
-import { Viewport } from "./viewport.js";
+import { BaseViewport } from "./base_viewport.js";
 
 export type ButtonSize = Vector2 | "MenuButton" | "SmallButton"; 
 
@@ -29,9 +29,9 @@ export class Button extends AbstractAnimated {
     }
 
     update(timestamp: number): void { }
-    draw(vp: Viewport): void {
+    draw(vp: BaseViewport): void {
         vp.drawRect(this.position, this.size, this.color);
         vp.drawText(this.text, this.position.added(this.size.multed(0.5)), this.size.multed(0.9), "white");
     }
-    recalculate(vp: Viewport): void { }
+    recalculate(vp: BaseViewport): void { }
 }

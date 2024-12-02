@@ -1,4 +1,4 @@
-import { Viewport } from "./viewport.js"
+import { BaseViewport } from "./base_viewport.js"
 import { Vector2 } from "./vector2.js"
 import { SpriteManager } from "./sprite_manager.js"
 import { AbstractDrawable } from "./types.js";
@@ -19,13 +19,13 @@ export class Grid extends AbstractDrawableGrid {
     now_turn: string;
     state: string;
 
-    constructor(vp: Viewport) {
+    constructor(vp: BaseViewport) {
         super();
         this.size = new Vector2 (8,8);
         this.recalculate(vp);
     }
 
-    draw(vp: Viewport): void {
+    draw(vp: BaseViewport): void {
         for (let x = 0; x < this.size.x; ++x) {
             for (let y = 0; y < this.size.y; ++y) {
                 vp.drawImage(SpriteManager.grass, 
@@ -34,7 +34,7 @@ export class Grid extends AbstractDrawableGrid {
             }
         }
     }
-    recalculate(vp: Viewport): void {
+    recalculate(vp: BaseViewport): void {
         let sideSize = Math.min(vp.size.x, vp.size.y);
         this.cellMargin = sideSize / 100;
         this.cellInnerMargin = sideSize / 100;

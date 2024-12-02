@@ -1,4 +1,4 @@
-import {Viewport} from "./viewport.js";
+import {BaseViewport} from "./base_viewport.js";
 
 export enum Direction {
     Up,
@@ -8,8 +8,8 @@ export enum Direction {
 }
 
 export abstract class AbstractDrawable {
-    abstract draw(vp: Viewport): void;
-    abstract recalculate(vp: Viewport): void;
+    abstract draw(vp: BaseViewport): void;
+    abstract recalculate(vp: BaseViewport): void;
 }
 
 export abstract class AbstractAnimated extends AbstractDrawable { 

@@ -1,15 +1,21 @@
 import { GameScreen } from "./game_screen.js";
+import { UIViewport } from "./ui_viewport.js";
 
 export class LoginScreen extends GameScreen {
     readonly textAnimationInterval = 200;
     intervalToAnimation = this.textAnimationInterval;
     textAnimation: number;
     readonly loginTexts = ["Login.", "Login..", "Login..."];
-
+    viewport: UIViewport;
     constructor() {
         super();
         this.textAnimation = 0;
     }
+    init(canvas: HTMLCanvasElement): void {
+        this.viewport = new UIViewport(canvas);
+        this.viewports = [this.viewport];
+    }
+
     update(timestamp: number): void {
         super.update(timestamp);
         this.intervalToAnimation -= timestamp;

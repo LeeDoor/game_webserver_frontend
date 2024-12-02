@@ -7,22 +7,17 @@ export enum ViewportState{
     Shake
 }
 
-export class Viewport {
+export class BaseViewport {
     readonly shaketime = 1000; // const time for shaking animation
     animationtime = 0; // ticks for some animation. 0 means that animation stopped
-
-    position: Vector2; // position of viewport on global field
     size: Vector2; // size of this viewport (canvas)
     readonly ctx: CanvasRenderingContext2D; // context to draw elements
-    scale: number; // scaling
     shift: Vector2; // shift inside canvas. used for animations like shaking, avoiding moving the canvas itself
     state: ViewportState; // current animation of viewport
 
-    constructor(canvas: HTMLCanvasElement, position: Vector2 = new Vector2(0, 0)) {
-        this.position = position;
+    constructor(canvas: HTMLCanvasElement) {
         this.size = new Vector2(canvas.width, canvas.height);
         this.ctx = canvas.getContext('2d');
-        this.scale = 1;
         this.shift = new Vector2(0,0);
         this.state = ViewportState.Idle;
     }
@@ -54,36 +49,27 @@ export class Viewport {
         this.state = ViewportState.Shake;
         this.animationtime = this.shaketime;
     }
-    private globalToLocalPos(position: Vector2) {
-        return new Vector2(
-            this.scale * (position.x - this.position.x + this.shift.x), 
-            this.scale * (position.y - this.position.y + this.shift.y)
-        );
-    }
 
     drawImage(sprite: Sprite, position: Vector2, size?: Vector2) {
-        let vpp = this.globalToLocalPos(position);
         this.ctx.drawImage(sprite.img, 
-            vpp.x, vpp.y,
-            (size ? size.x : sprite.img.width) * this.scale, 
-            (size ? size.y : sprite.img.height) * this.scale
+            position.x, position.y,
+            size ? size.x : sprite.img.width, 
+            size ? size.y : sprite.img.height
         );
     }
 
     drawText(text: string, position?: Vector2, fitTo?: Vector2, color?: string) {
-        let vpp = position ? this.globalToLocalPos(position) : new Vector2(0);
+        position = position ?? new Vector2(0);
         this.ctx.fillStyle = color ?? "black";  
         this.ctx.font = this.getFontString(fitTo ? this.getFittedFontSize(text, fitTo) : 240);
         this.ctx.textBaseline = "middle";
         this.ctx.textAlign = "center";
-        this.ctx.fillText(text, vpp.x, vpp.y, this.size.x);
+        this.ctx.fillText(text, position.x, position.y, this.size.x);
     }
 
     drawRect(position: Vector2, size: Vector2, color: string) {
-        let vpp = this.globalToLocalPos(position);
-        let scaled = size.multed(this.scale);
         this.ctx.fillStyle = color;
-        this.ctx.fillRect(vpp.x, vpp.y, scaled.x, scaled.y);
+        this.ctx.fillRect(position.x, position.y, size.x, size.y);
     }
 
     getFittedFontSize(text: string, fitTo: Vector2) : number {
