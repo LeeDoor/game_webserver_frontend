@@ -7,12 +7,11 @@ import { Vector2 } from "./vector2.js";
 
 export class LoginScreen extends GameScreen {
     layer: Layer;
-
     loadingTB: TextBlock;
 
     constructor(redirectionMethod: RedirectionMethod) {
         super(redirectionMethod);
-        this.loadingTB = new TextBlock("loading...", new Vector2(400), new Vector2(400), "coral");
+        this.loadingTB = new TextBlock("loading...", new Vector2(1, 0.1), new Vector2(0.5), "coral");
     }
 
     init(canvas: HTMLCanvasElement): void {
@@ -29,7 +28,7 @@ export class LoginScreen extends GameScreen {
         }
         else{
             this.loadingTB.text = "Unable to login...";
-            account.connect().then(this.onConnection);
+            account.connect().then((connected: boolean) => this.onConnection(connected));
         }
     }
 }

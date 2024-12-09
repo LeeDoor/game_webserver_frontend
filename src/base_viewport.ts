@@ -7,7 +7,7 @@ export enum ViewportState{
     Shake
 }
 
-export class BaseViewport {
+export abstract class BaseViewport {
     readonly shaketime = 1000; // const time for shaking animation
     animationtime = 0; // ticks for some animation. 0 means that animation stopped
     size: Vector2; // size of this viewport (canvas)
@@ -29,6 +29,7 @@ export class BaseViewport {
     clearScreen(){
         this.ctx.clearRect(0, 0, this.size.x, this.size.y);
     }
+
     update(timestamp : number) {
         this.animationtime -= timestamp;
         if(this.state == ViewportState.Shake){ 
@@ -45,12 +46,14 @@ export class BaseViewport {
             this.shift = new Vector2(0,0);
         }
     }
+
     shake() {
         this.state = ViewportState.Shake;
         this.animationtime = this.shaketime;
     }
 
     drawImage(sprite: Sprite, position: Vector2, size?: Vector2) {
+        position = this.toLocalPosition(position);
         this.ctx.drawImage(sprite.img, 
             position.x, position.y,
             size ? size.x : sprite.img.width, 
@@ -59,8 +62,9 @@ export class BaseViewport {
     }
 
     drawText(text: string, position?: Vector2, fitTo?: Vector2, color?: string) {
-        position = position ?? new Vector2(0);
+        position = this.toLocalPosition(position) ?? new Vector2(0);
         this.ctx.fillStyle = color ?? "black";  
+        fitTo = fitTo ? this.toLocalSize(fitTo) : null;
         this.ctx.font = this.getFontString(fitTo ? this.getFittedFontSize(text, fitTo) : 240);
         this.ctx.textBaseline = "middle";
         this.ctx.textAlign = "center";
@@ -69,6 +73,8 @@ export class BaseViewport {
 
     drawRect(position: Vector2, size: Vector2, color: string) {
         this.ctx.fillStyle = color;
+        position = this.toLocalPosition(position);
+        size = this.toLocalSize(size);
         this.ctx.fillRect(position.x, position.y, size.x, size.y);
     }
 
@@ -84,4 +90,7 @@ export class BaseViewport {
             fontSize += step;
         }
     }
+
+    abstract toLocalPosition(position: Vector2): Vector2;
+    abstract toLocalSize(size: Vector2): Vector2;
 }   
