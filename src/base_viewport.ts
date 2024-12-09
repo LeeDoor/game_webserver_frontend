@@ -35,8 +35,8 @@ export class BaseViewport {
             let maxShift = 200;
             // function defines the curve of shakeness
             let timeDep = (1 + this.shaketime/10 - this.animationtime/10);
-            this.shift.x = (Math.random()-0.5) * 2 * maxShift / timeDep;
-            this.shift.y = (Math.random()-0.5) * 2 * maxShift / timeDep;
+            this.shift.x = (Math.random() - 0.5) * 2 * maxShift / timeDep;
+            this.shift.y = (Math.random() - 0.5) * 2 * maxShift / timeDep;
         }
 
         if (this.animationtime < 0){

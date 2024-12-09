@@ -3,8 +3,6 @@ import { GameScreen, GameState, RedirectionMethod} from "./game_screen.js";
 import { UIViewport } from "./ui_viewport.js";
 
 export class LoginScreen extends GameScreen {
-    readonly textAnimationInterval = 200;
-    intervalToAnimation = this.textAnimationInterval;
     viewport: UIViewport;
     loginText: string;
 
@@ -32,11 +30,8 @@ export class LoginScreen extends GameScreen {
 
     update(timestamp: number) {
         super.update(timestamp);
-        this.intervalToAnimation -= timestamp;
-        if (this.intervalToAnimation < 0) {
-            console.log("logining...");
-        }
     }
+    
     draw(): void {
         let logpos = this.viewport.size.multed(0.5, 0.3);
         this.viewport.drawText(this.loginText, logpos, null, "coral");

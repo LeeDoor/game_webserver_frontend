@@ -28,8 +28,6 @@ export class Game {
             value.init(Screen.canvas);
         }
         this.state = GameState.Login;
-        this.captureEvents();  
-            
         requestAnimationFrame(()=>this.loop(this.prevTime));
     };
     private draw(){
@@ -47,10 +45,6 @@ export class Game {
     private update(timestamp : number){
         this.screens[this.state].update(timestamp);
     };
-    
-    private captureEvents() {
-        
-    }
     private redirectScreen(toState: GameState){
         this.state = toState;
     }

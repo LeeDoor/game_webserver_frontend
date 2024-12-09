@@ -5,16 +5,10 @@ import { UIViewport } from "./ui_viewport.js";
 import { GameViewport } from "./game_viewport.js";
 
 export class MainMenuScreen extends GameScreen {
-    buttons: Button[];
-    animationTime = 3000;
-
     viewport: UIViewport;
 
     constructor(redirectionMethod: RedirectionMethod) {
         super(redirectionMethod);
-        this.buttons = [
-            new Button(new Vector2(100), new Vector2(800, 400), "aboba", "red"),
-        ];
     }
 
     init(canvas: HTMLCanvasElement) {
@@ -23,8 +17,6 @@ export class MainMenuScreen extends GameScreen {
     }
 
     draw(): void {
-        for(let button of this.buttons) {
-            button.draw(this.viewport);
-        }
+        
     }
 }
