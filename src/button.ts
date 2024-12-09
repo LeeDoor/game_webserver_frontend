@@ -1,10 +1,10 @@
-import { AbstractAnimated } from "./types.js";
+import { BaseAnimated } from "./types.js";
 import { Vector2 } from "./vector2.js";
 import { BaseViewport } from "./base_viewport.js";
 
 export type ButtonSize = Vector2 | "MenuButton" | "SmallButton"; 
 
-export class Button extends AbstractAnimated {
+export class Button extends BaseAnimated {
     position: Vector2;
     size: Vector2;
     text: string;

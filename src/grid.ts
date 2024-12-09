@@ -1,9 +1,9 @@
 import { BaseViewport } from "./base_viewport.js"
 import { Vector2 } from "./vector2.js"
 import { SpriteManager } from "./sprite_manager.js"
-import { AbstractDrawable } from "./types.js";
+import { BaseDrawable } from "./types.js";
 
-export abstract class AbstractDrawableGrid extends AbstractDrawable {
+export abstract class AbstractDrawableGrid extends BaseDrawable {
     cellMargin : number; // margin between viewport borders and grid begining
     cellInnerMargin : number; // margin for each cell
     cellSize : number; // size of each cell in pixels
