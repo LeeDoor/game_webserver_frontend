@@ -31,7 +31,6 @@ export class Game {
         requestAnimationFrame(()=>this.loop(this.prevTime));
     };
     private draw(){
-        this.screens[this.state].clear();
         this.screens[this.state].draw();
     };
     private loop(timestamp : number){

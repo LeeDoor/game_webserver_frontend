@@ -1,4 +1,4 @@
-import { BaseViewport } from "./base_viewport.js";
+import { BaseViewport, ViewportState } from "./base_viewport.js";
 import { BaseAnimated, BaseClickable, BaseDrawable } from "./types.js";
 import { Vector2 } from "./vector2.js";
 
@@ -7,7 +7,16 @@ export class Layer {
     toDraw: BaseDrawable[];
     toUpdate: BaseAnimated[];
     toClick: BaseClickable[];
+
+    constructor(viewport: BaseViewport) {
+        this.viewport = viewport;
+        this.toDraw = [];
+        this.toUpdate = [];
+        this.toClick = [];
+    }
+
     draw(){
+        this.viewport.clearScreen();
         for(let drawable of this.toDraw) {
             drawable.draw(this.viewport);
         }

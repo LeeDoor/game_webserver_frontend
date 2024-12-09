@@ -1,39 +1,35 @@
 import { account } from "./game.js";
 import { GameScreen, GameState, RedirectionMethod} from "./game_screen.js";
+import { Layer } from "./layer.js";
+import { TextBlock } from "./text_block.js";
 import { UIViewport } from "./ui_viewport.js";
+import { Vector2 } from "./vector2.js";
 
 export class LoginScreen extends GameScreen {
-    viewport: UIViewport;
-    loginText: string;
+    layer: Layer;
+
+    loadingTB: TextBlock;
 
     constructor(redirectionMethod: RedirectionMethod) {
         super(redirectionMethod);
-        this.loginText = "Logining...";
+        this.loadingTB = new TextBlock("loading...", new Vector2(400), new Vector2(400), "coral");
     }
 
     init(canvas: HTMLCanvasElement): void {
-        this.viewport = new UIViewport(canvas);
-        this.viewports = [this.viewport];
+        this.layer = new Layer(new UIViewport(canvas));
+        this.layers.push(this.layer);
+        this.layer.subscribeDraw(this.loadingTB);
         account.connect().then((connected: boolean) => this.onConnection(connected));
     }
 
     onConnection(connected: boolean){
         if(connected){
-            this.loginText = "Connected!";
+            this.loadingTB.text = "Connected!";
             (()=> this.redirectionMethod(GameState.MainMenu))();
         }
         else{
-            this.loginText = "Unable to login...";
+            this.loadingTB.text = "Unable to login...";
             account.connect().then(this.onConnection);
         }
-    }
-
-    update(timestamp: number) {
-        super.update(timestamp);
-    }
-    
-    draw(): void {
-        let logpos = this.viewport.size.multed(0.5, 0.3);
-        this.viewport.drawText(this.loginText, logpos, null, "coral");
     }
 }

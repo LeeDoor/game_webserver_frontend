@@ -1,4 +1,5 @@
 import { BaseViewport } from "./base_viewport.js";
+import { Layer } from "./layer.js";
 
 export enum GameState {
     Login,
@@ -10,23 +11,22 @@ export enum GameState {
 export type RedirectionMethod = (redirectTo: GameState) => void;
 
 export abstract class GameScreen {
-    viewports: BaseViewport[];
+    layers: Layer[];
     redirectionMethod: RedirectionMethod;
 
     constructor(redirectionMethod: RedirectionMethod){
         this.redirectionMethod = redirectionMethod;
+        this.layers = [];
     }
 
     update(timestamp: number) {
-        for(let vp of this.viewports){
-            vp.update(timestamp);
+        for(let layer of this.layers){
+            layer.update(timestamp);
         }
     }
-    abstract draw(): void;
-    
-    clear(): void {
-        for(let vp of this.viewports){
-            vp.clearScreen();
+    draw(): void {
+        for(let layer of this.layers) {
+            layer.draw();
         }
     }
 
