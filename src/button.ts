@@ -1,10 +1,10 @@
-import { BaseAnimated } from "./types.js";
+import { BaseAnimated, BaseClickable } from "./types.js";
 import { Vector2 } from "./vector2.js";
 import { BaseViewport } from "./base_viewport.js";
 
 export type ButtonSize = Vector2 | "MenuButton" | "SmallButton"; 
 
-export class Button extends BaseAnimated {
+export class Button extends BaseClickable {
     position: Vector2;
     size: Vector2;
     text: string;
@@ -28,10 +28,19 @@ export class Button extends BaseAnimated {
         }
     }
 
-    update(timestamp: number): void { }
     draw(vp: BaseViewport): void {
         vp.drawRect(this.position, this.size, this.color);
         vp.drawText(this.text, this.position.added(this.size.multed(0.5)), this.size.multed(0.9), "white");
     }
+    
     recalculate(vp: BaseViewport): void { }
+    
+    click(): void {
+        console.log("button clicked " + String(this.text));
+    }
+    
+    isClicked(position: Vector2): boolean {
+        return this.position.x < position.x && position.x < this.position.x + this.size.x &&
+            this.position.y < position.y && position.y < this.position.y + this.size.y;
+    }
 }
