@@ -5,7 +5,7 @@ import { Vector2 } from "./vector2.js";
 export enum GameState {
     Login,
     MainMenu,
-    //Queue,
+    Queue,
     //Match
 }
 

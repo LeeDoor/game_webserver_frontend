@@ -18,7 +18,7 @@ export class MainMenuScreen extends GameScreen {
         this.layers = [];
         this.buttons = {
             [MenuButtons.Play]: new Button(new Vector2(0.3, 0.3), "MenuButton", 
-            () => {this.redirectionMethod(GameState.Login);}, 
+            () => {this.redirectionMethod(GameState.Queue);}, 
             "Play", "coral"),
         }
     }

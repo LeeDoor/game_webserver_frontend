@@ -44,4 +44,34 @@ export class NetworkManager {
         });
         return res;
     }
+    
+    async enqueue(token: string) : Promise<boolean>{
+        let res : boolean = false;
+        await fetch(this.SERVER_URL + '/api/game/enqueue', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization':'Bearer ' + token
+            }
+        }).then(response=>{
+            res = response.ok;
+        });
+        return res;
+    }
+    async waitForOpponent(token: string) : Promise<string | null> {
+        let res : string | null = "";
+        await fetch(this.SERVER_URL + '/api/game/wait_for_opponent', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization':'Bearer ' + token
+            }
+        }).then(response=>{
+            if(!response.ok) res = null;
+            return response.json();
+        }).then(json=> {
+            if(res) res = json.sessionId;
+        });
+        return res;
+    }
 }

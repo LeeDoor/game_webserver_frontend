@@ -3,6 +3,7 @@ import { AccountData, NetworkManager } from "./network_manager.js";
 export class AccountManager {
     network = new NetworkManager();
     ld = new AccountData();
+    sessionId: string | null;
 
     generatedLogin() {return "guest_abobus_" + Math.ceil(Math.random() * 1000000)}
     generatedPassword() {
@@ -30,7 +31,7 @@ export class AccountManager {
     }
 
     async connect() : Promise<boolean> {
-        await new Promise(resolve => setTimeout(resolve, 4000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
         return true;
         let parsed = this.parseData();
         if(parsed != null) {
