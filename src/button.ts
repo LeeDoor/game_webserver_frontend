@@ -2,25 +2,24 @@ import { BaseAnimated, BaseClickable } from "./types.js";
 import { Vector2 } from "./vector2.js";
 import { BaseViewport } from "./base_viewport.js";
 
-export type ButtonSize = Vector2 | "MenuButton" | "SmallButton"; 
-
+export type ButtonSize = Vector2 | "MenuButton"; 
+export type ClickMethod = () => void;
 export class Button extends BaseClickable {
     position: Vector2;
     size: Vector2;
     text: string;
     color: string;
+    clickCommand: ClickMethod;
 
-    constructor (position: Vector2, size: ButtonSize, text = "", color = "green") {
+    constructor (position: Vector2, size: ButtonSize, command: ClickMethod, text = "", color = "green") {
         super();
+        this.clickCommand = command;
         this.position = position;
         this.text = text;
         this.color = color;
         switch(size) {
             case "MenuButton":
-                this.size = new Vector2(400, 100);
-                break;
-            case "SmallButton":
-                this.size = new Vector2(100, 40);
+                this.size = new Vector2(0.4, 0.2);
                 break;
             default:
                 this.size = size as Vector2;
@@ -36,7 +35,7 @@ export class Button extends BaseClickable {
     recalculate(vp: BaseViewport): void { }
     
     click(): void {
-        console.log("button clicked " + String(this.text));
+        this.clickCommand();
     }
     
     isClicked(position: Vector2, viewport: BaseViewport): boolean {

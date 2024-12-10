@@ -53,6 +53,6 @@ export class Game {
         canvas.addEventListener("mousedown", (e) => {this.onMouseEvent(e);});
     }
     private onMouseEvent(e: MouseEvent) { 
-        this.screens[this.state].mouseEvent(new Vector2((e.offsetX) * 3, (e.offsetY) * 3));
+        this.screens[this.state].mouseEvent(new Vector2(e.offsetX, e.offsetY).multed(Screen.canvasQualityMultiplier));
     }
 }
