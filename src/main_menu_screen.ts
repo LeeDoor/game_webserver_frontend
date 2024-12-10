@@ -25,7 +25,7 @@ export class MainMenuScreen extends GameScreen {
 
     init(canvas: HTMLCanvasElement) {
         this.layer = new Layer(new UIViewport(canvas));
-        this.layers.push(this.layer);
+        this.layers = [this.layer];
         this.subscribeButtons();
     }
 
