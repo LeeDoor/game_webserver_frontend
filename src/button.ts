@@ -39,7 +39,8 @@ export class Button extends BaseClickable {
         console.log("button clicked " + String(this.text));
     }
     
-    isClicked(position: Vector2): boolean {
+    isClicked(position: Vector2, viewport: BaseViewport): boolean {
+        position = viewport.toStandardPosition(position);
         return this.position.x < position.x && position.x < this.position.x + this.size.x &&
             this.position.y < position.y && position.y < this.position.y + this.size.y;
     }

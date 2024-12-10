@@ -8,5 +8,7 @@ export class UIViewport extends BaseViewport {
     toLocalSize(size: Vector2): Vector2 {
         return this.size.multed(size);
     }
-    
+    toStandardPosition(position: Vector2): Vector2 {
+        return position.multed(new Vector2(1 / this.size.x, 1 / this.size.y));
+    }
 } 

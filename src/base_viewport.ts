@@ -92,5 +92,6 @@ export abstract class BaseViewport {
     }
 
     abstract toLocalPosition(position: Vector2): Vector2;
+    abstract toStandardPosition(position: Vector2): Vector2;
     abstract toLocalSize(size: Vector2): Vector2;
 }   

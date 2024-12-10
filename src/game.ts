@@ -4,6 +4,7 @@ import { AccountManager } from "./account_manager.js";
 import {LoginScreen} from "./login_screen.js";
 import { GameScreen,  FRAME_INTERVAL, GameState } from "./game_screen.js";
 import { MainMenuScreen } from "./main_menu_screen.js";
+import { Vector2 } from "./vector2.js";
 
 export const account: AccountManager = new AccountManager();
 
@@ -28,6 +29,7 @@ export class Game {
             value.init(Screen.canvas);
         }
         this.state = GameState.Login;
+        this.captureMouseEvents(Screen.canvas);
         requestAnimationFrame(()=>this.loop(this.prevTime));
     };
     private draw(){
@@ -46,5 +48,11 @@ export class Game {
     };
     private redirectScreen(toState: GameState){
         this.state = toState;
+    }
+    private captureMouseEvents(canvas: HTMLCanvasElement){
+        canvas.addEventListener("mousedown", (e) => {this.onMouseEvent(e);});
+    }
+    private onMouseEvent(e: MouseEvent) { 
+        this.screens[this.state].mouseEvent(new Vector2((e.offsetX) * 3, (e.offsetY) * 3));
     }
 }

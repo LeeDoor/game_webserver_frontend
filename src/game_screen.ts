@@ -1,5 +1,6 @@
 import { BaseViewport } from "./base_viewport.js";
 import { Layer } from "./layer.js";
+import { Vector2 } from "./vector2.js";
 
 export enum GameState {
     Login,
@@ -30,7 +31,13 @@ export abstract class GameScreen {
         }
     }
 
-    abstract init(canvas: HTMLCanvasElement) : void;
+    abstract init(canvas: HTMLCanvasElement) : void; 
+
+    mouseEvent(position: Vector2) {
+        for(let layer of this.layers) {
+            layer.onClick(position);
+        }
+    }
 }
 export const FRAMERATE = 60; // request animation frame is max 60
 export const FRAME_INTERVAL = 1000 / FRAMERATE;

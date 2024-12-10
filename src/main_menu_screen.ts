@@ -18,15 +18,15 @@ export class MainMenuScreen extends GameScreen {
         super(redirectionMethod);
         this.layers = [];
         this.buttons = {
-            [MenuButtons.Play]: new Button(new Vector2(0.5, 0.3), new Vector2(0.4, 0.2), "Play", "blue"),
-            [MenuButtons.Exit]: new Button(new Vector2(0.5, 0.7), new Vector2(0.4, 0.2), "Exit", "red"),
+            [MenuButtons.Play]: new Button(new Vector2(0.3, 0.3), new Vector2(0.4, 0.2), "Play", "blue"),
+            [MenuButtons.Exit]: new Button(new Vector2(0.3, 0.7), new Vector2(0.4, 0.2), "Exit", "red"),
         }
-        this.subscribeButtons();
     }
 
     init(canvas: HTMLCanvasElement) {
         this.layer = new Layer(new UIViewport(canvas));
         this.layers.push(this.layer);
+        this.subscribeButtons();
     }
 
     private subscribeButtons() {

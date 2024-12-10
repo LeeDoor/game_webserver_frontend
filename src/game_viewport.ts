@@ -3,6 +3,9 @@ import { Sprite } from "./sprite_manager.js";
 import { Vector2 } from "./vector2.js";
 
 export class GameViewport extends BaseViewport {
+    toStandardPosition(position: Vector2): Vector2 {
+        throw new Error("Method not implemented.");
+    }
 
     position: Vector2;
     scale: number;
