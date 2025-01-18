@@ -75,13 +75,6 @@ export class GameManager {
     sessionId: string | null;
 
     async joinMatch(onEnqueued?: Notify, onFound?: Notify) : Promise<boolean> {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        if (onEnqueued) 
-            onEnqueued();
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        if (onFound) 
-            onFound();
-        return true;
         let token = account.ld.token;
         if(!token) 
             return false;
@@ -127,8 +120,6 @@ export class AccountManager {
     }
 
     async connect() : Promise<boolean> {
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        return true;
         let parsed = this.parseData();
         if(parsed != null) {
             this.ld = parsed;
