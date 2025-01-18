@@ -1,5 +1,5 @@
 class NetworkManager {
-    readonly SERVER_URL = "http://localhost:8000";
+    readonly SERVER_URL = "http://localhost:8080";
 
     async login(ad: AccountData) : Promise<string | null> {
         let response = await fetch(this.SERVER_URL + '/api/login', {
