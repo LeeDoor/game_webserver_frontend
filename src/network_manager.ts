@@ -1,10 +1,4 @@
-export class AccountData {
-    login: string;
-    password: string;
-    token?: string;
-}
-
-export class NetworkManager {
+class NetworkManager {
     readonly SERVER_URL = "http://localhost:8000";
 
     async login(ad: AccountData) : Promise<string | null> {
@@ -75,3 +69,96 @@ export class NetworkManager {
         return res;
     }
 }
+
+type Notify = () => void;
+export class GameManager {
+    sessionId: string | null;
+
+    async joinMatch(onEnqueued?: Notify, onFound?: Notify) : Promise<boolean> {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (onEnqueued) 
+            onEnqueued();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (onFound) 
+            onFound();
+        return true;
+        let token = account.ld.token;
+        if(!token) 
+            return false;
+        let enqueued = await network.enqueue(token);
+        if(!enqueued) 
+            return false;
+        if (onEnqueued) 
+            onEnqueued();
+        let sessionId : string | null = await network.waitForOpponent(account.ld.token);
+        this.sessionId = sessionId;
+        if(onFound)
+            onFound();
+        return sessionId != null;
+    }
+}
+
+export class AccountManager {
+    ld = new AccountData();
+
+    generatedLogin() {return "guest_abobus_" + Math.ceil(Math.random() * 1000000)}
+    generatedPassword() {
+        let password = "";
+        let charset = "qwertyuiopasdfghjklzxcvbnm!@#$%^&*()";
+        for (let i = 0; i < 15; ++i) {
+            password += charset[Math.random() * 100 % charset.length];
+        }
+        return password;
+   }
+    parseData() : AccountData | null {
+        let login = localStorage.getItem("login");
+        let password = localStorage.getItem("password");
+        let token = localStorage.getItem("token");
+        return (login && password) ?  {login, password, token} : null;
+    }
+
+    saveData(ad: AccountData) {
+        localStorage.setItem("login", ad.login);
+        localStorage.setItem("password", ad.password);
+        if (ad.token) 
+            localStorage.setItem("token", ad.token);
+        this.ld = ad;
+        return true;
+    }
+
+    async connect() : Promise<boolean> {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return true;
+        let parsed = this.parseData();
+        if(parsed != null) {
+            this.ld = parsed;
+            if(this.ld.token && network.validateToken(this.ld.token)) 
+                return this.saveData(this.ld);
+        }
+        else{
+            this.ld = new AccountData();
+            this.ld.login = this.generatedLogin();
+            this.ld.password = this.generatedPassword();
+        }
+        let token : string | null = await network.login(this.ld);
+        if(token) {
+            this.ld.token = token;
+            return this.saveData(this.ld);
+        }
+        let registered : boolean = await network.register(this.ld);
+        if (registered) {
+            this.ld.token = await network.login(this.ld);
+            return this.ld.token == null ? false : this.saveData(this.ld);
+        }
+        return false;
+    }
+} 
+class AccountData {
+    login: string;
+    password: string;
+    token?: string;
+}
+
+export const game = new GameManager();
+export const account = new AccountManager();
+export const network = new NetworkManager();

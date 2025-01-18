@@ -1,9 +1,9 @@
-import { account } from "./game.js";
 import { GameScreen, GameState, RedirectionMethod} from "./game_screen.js";
 import { Layer } from "./layer.js";
 import { TextBlock } from "./text_block.js";
 import { UIViewport } from "./ui_viewport.js";
 import { Vector2 } from "./vector2.js";
+import { account } from "./network_manager.js";
 
 export class LoginScreen extends GameScreen {
     layer: Layer;
@@ -11,13 +11,13 @@ export class LoginScreen extends GameScreen {
 
     constructor(redirectionMethod: RedirectionMethod) {
         super(redirectionMethod);
-        this.loadingTB = new TextBlock("loading...", new Vector2(1, 0.1), new Vector2(0.5), "coral");
     }
-
+    
     init(canvas: HTMLCanvasElement): void {
+        this.loadingTB = new TextBlock("loading...", new Vector2(1, 0.1), new Vector2(0.5), "coral");
         this.layer = new Layer(new UIViewport(canvas));
-        this.layers.push(this.layer);
         this.layer.subscribeDraw(this.loadingTB);
+        this.layers.push(this.layer);
         account.connect().then((connected: boolean) => this.onConnection(connected));
     }
 

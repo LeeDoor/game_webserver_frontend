@@ -1,13 +1,11 @@
 import * as Screen from "./canvas.js";
 import {Grid} from "./grid.js";
-import { AccountManager } from "./account_manager.js";
+import * as Network from "./network_manager.js";
 import {LoginScreen} from "./login_screen.js";
 import { GameScreen,  FRAME_INTERVAL, GameState } from "./game_screen.js";
 import { MainMenuScreen } from "./main_menu_screen.js";
 import { Vector2 } from "./vector2.js";
 import { QueueScreen } from "./queue_screen.js";
-
-export const account: AccountManager = new AccountManager();
 
 export class Game {
     prevTime: number;
@@ -50,6 +48,7 @@ export class Game {
     };
     private redirectScreen(toState: GameState){
         this.state = toState;
+        this.screens[this.state].init(Screen.canvas);
     }
     private captureMouseEvents(canvas: HTMLCanvasElement){
         canvas.addEventListener("mousedown", (e) => {this.onMouseEvent(e);});
