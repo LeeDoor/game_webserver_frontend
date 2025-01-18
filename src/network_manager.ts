@@ -98,8 +98,14 @@ export class AccountManager {
     generatedPassword() {
         let password = "";
         let charset = "qwertyuiopasdfghjklzxcvbnm!@#$%^&*()";
+        let ints = "0123456789";
+        let intm = 0;
         for (let i = 0; i < 15; ++i) {
-            password += charset[Math.random() * 100 % charset.length];
+            password += charset[Math.floor(Math.random() * charset.length)];
+            if(Math.random() > intm / password.length) {
+                password += ints[Math.floor(Math.random() * ints.length)];
+                intm += 1;
+            }
         }
         return password;
    }
@@ -123,14 +129,13 @@ export class AccountManager {
         let parsed = this.parseData();
         if(parsed != null) {
             this.ld = parsed;
-            if(this.ld.token && network.validateToken(this.ld.token)) 
+            if(this.ld.token && await network.validateToken(this.ld.token)) 
                 return this.saveData(this.ld);
         }
-        else{
-            this.ld = new AccountData();
-            this.ld.login = this.generatedLogin();
-            this.ld.password = this.generatedPassword();
-        }
+        this.ld = new AccountData();
+        this.ld.login = this.generatedLogin();
+        this.ld.password = this.generatedPassword();
+        
         let token : string | null = await network.login(this.ld);
         if(token) {
             this.ld.token = token;

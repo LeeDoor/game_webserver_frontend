@@ -25,9 +25,7 @@ export class Game {
         };
     }
     public start(){
-        for(const [_, value] of Object.entries(this.screens)) {
-            value.init(Screen.canvas);
-        }
+        this.redirectScreen(GameState.Login);
         this.state = GameState.Login;
         this.captureMouseEvents(Screen.canvas);
         requestAnimationFrame(()=>this.loop(this.prevTime));
