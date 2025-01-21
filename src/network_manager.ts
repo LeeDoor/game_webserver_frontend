@@ -39,16 +39,27 @@ class NetworkManager {
         return res;
     }
     
-    async enqueue(token: string) : Promise<boolean>{
-        let res : boolean = false;
+    async enqueue(token: string) : Promise<boolean | string>{
+        let res: boolean | string = false;
         await fetch(this.SERVER_URL + '/api/game/enqueue', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization':'Bearer ' + token
             }
-        }).then(response=>{
-            res = response.ok;
+        }).then(response=>{return response.json();})
+        .then(json=>{ 
+            if('error_name' in json) {
+                switch(json.error_name){
+                    case "enqueue_error":
+                        res = true;
+                        break;
+                    case "in_the_match":
+                        res = json.sessionId;
+                        break;
+                }
+            }
+            else res = true;
         });
         return res;
     }
@@ -79,11 +90,16 @@ export class GameManager {
         if(!token) 
             return false;
         let enqueued = await network.enqueue(token);
-        if(!enqueued) 
+        let sessionId : string | null = null;
+        if(enqueued == false) 
             return false;
+        if(enqueued != true) {
+            sessionId = enqueued;
+        }
         if (onEnqueued) 
             onEnqueued();
-        let sessionId : string | null = await network.waitForOpponent(account.ld.token);
+        if(sessionId == null)
+            sessionId = await network.waitForOpponent(account.ld.token);
         this.sessionId = sessionId;
         if(onFound)
             onFound();

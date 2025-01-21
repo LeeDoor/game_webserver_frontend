@@ -18,6 +18,6 @@ export abstract class BaseAnimated extends BaseDrawable {
 }
 
 export abstract class BaseClickable extends BaseDrawable {
-    abstract click(): void;
+    abstract click(clicked: Vector2, viewport: BaseViewport): void;
     abstract isClicked(position: Vector2, viewport: BaseViewport): boolean;
 }

@@ -21,8 +21,8 @@ export class QueueScreen extends GameScreen {
             () => {this.queueTB.text = "waiting for opponents...";},
             () => {this.queueTB.text = "opponent found!";}
         ).then(res => {
-            if (res) this.redirectionMethod(GameState.MainMenu);
-            else this.redirectionMethod(GameState.Login);
+            if (res) this.redirectionMethod(GameState.Match);
+            else this.redirectionMethod(GameState.MainMenu);
         });
     }
 }

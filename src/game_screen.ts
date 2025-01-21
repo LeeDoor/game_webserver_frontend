@@ -6,7 +6,7 @@ export enum GameState {
     Login,
     MainMenu,
     Queue,
-    //Match
+    Match
 }
 
 export type RedirectionMethod = (redirectTo: GameState) => void;

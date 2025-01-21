@@ -28,4 +28,7 @@ export class Vector2 {
             return new Vector2(this.x + n.x, this.y + n.y);
         return new Vector2(this.x + n, this.y + (ny ?? n));
     }
+    public inverted(): Vector2 {
+        return new Vector2(1 / this.x, 1 / this.y);
+    }
 }

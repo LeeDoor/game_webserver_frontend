@@ -4,7 +4,7 @@ import { BaseViewport } from "./base_viewport.js";
 
 export type ButtonSize = Vector2 | "MenuButton"; 
 export type ClickMethod = () => void;
-export class Button extends BaseClickable {
+export class Button implements BaseClickable {
     position: Vector2;
     size: Vector2;
     text: string;
@@ -12,7 +12,6 @@ export class Button extends BaseClickable {
     clickCommand: ClickMethod;
 
     constructor (position: Vector2, size: ButtonSize, command: ClickMethod, text = "", color = "green") {
-        super();
         this.clickCommand = command;
         this.position = position;
         this.text = text;
@@ -34,7 +33,7 @@ export class Button extends BaseClickable {
     
     recalculate(vp: BaseViewport): void { }
     
-    click(): void {
+    click(position: Vector2, viewport: BaseViewport): void {
         this.clickCommand();
     }
     

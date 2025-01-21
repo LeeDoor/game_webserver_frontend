@@ -29,7 +29,7 @@ export class Layer {
     onClick(position: Vector2){
         for (let clickable of this.toClick) {
             if(clickable.isClicked(position, this.viewport)) {
-                clickable.click();
+                clickable.click(position, this.viewport);
             }
         }
     }

@@ -1,6 +1,5 @@
 import {Vector2} from "./vector2.js";
 import {Sprite} from "./sprite_manager.js";
-import {Grid} from "./grid.js";
 
 export enum ViewportState{
     Idle,

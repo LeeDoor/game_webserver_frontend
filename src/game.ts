@@ -1,11 +1,10 @@
 import * as Screen from "./canvas.js";
-import {Grid} from "./grid.js";
-import * as Network from "./network_manager.js";
 import {LoginScreen} from "./login_screen.js";
 import { GameScreen,  FRAME_INTERVAL, GameState } from "./game_screen.js";
 import { MainMenuScreen } from "./main_menu_screen.js";
 import { Vector2 } from "./vector2.js";
 import { QueueScreen } from "./queue_screen.js";
+import { MatchScreen } from "./match_screen.js";
 
 export class Game {
     prevTime: number;
@@ -22,6 +21,7 @@ export class Game {
             [GameState.Login]: new LoginScreen(redirectionFunc),
             [GameState.MainMenu]: new MainMenuScreen(redirectionFunc),
             [GameState.Queue]: new QueueScreen(redirectionFunc),
+            [GameState.Match]: new MatchScreen(redirectionFunc),
         };
     }
     public start(){
