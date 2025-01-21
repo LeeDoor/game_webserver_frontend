@@ -4,7 +4,10 @@ import { Vector2 } from "./vector2.js";
 
 export class GameViewport extends BaseViewport {
     toStandardPosition(position: Vector2): Vector2 {
-        throw new Error("Method not implemented.");
+        return new Vector2(
+            position.x / this.scale + this.position.x - this.shift.x,
+            position.y / this.scale + this.position.y - this.shift.y
+        );
     }
 
     position: Vector2;

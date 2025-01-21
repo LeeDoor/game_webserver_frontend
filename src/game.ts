@@ -27,7 +27,7 @@ export class Game {
     public start(){
         this.redirectScreen(GameState.Login);
         this.state = GameState.Login;
-        this.captureMouseEvents(Screen.canvas);
+        this.captureEvents(Screen.canvas);
         requestAnimationFrame(()=>this.loop(this.prevTime));
     };
     private draw(){
@@ -48,8 +48,12 @@ export class Game {
         this.state = toState;
         this.screens[this.state].init(Screen.canvas);
     }
-    private captureMouseEvents(canvas: HTMLCanvasElement){
+    private captureEvents(canvas: HTMLCanvasElement){
         canvas.addEventListener("mousedown", (e) => {this.onMouseEvent(e);});
+        window.addEventListener("resize", () => { 
+            Screen.updateCanvas(canvas);
+            this.screens[this.state].recalculate(canvas); 
+        });
     }
     private onMouseEvent(e: MouseEvent) { 
         this.screens[this.state].mouseEvent(new Vector2(e.offsetX, e.offsetY).multed(Screen.canvasQualityMultiplier));

@@ -15,7 +15,7 @@ export abstract class BaseViewport {
     state: ViewportState; // current animation of viewport
 
     constructor(canvas: HTMLCanvasElement) {
-        this.size = new Vector2(canvas.width, canvas.height);
+        this.recalculate(canvas);
         this.ctx = canvas.getContext('2d');
         this.shift = new Vector2(0,0);
         this.state = ViewportState.Idle;
@@ -28,7 +28,9 @@ export abstract class BaseViewport {
     clearScreen(){
         this.ctx.clearRect(0, 0, this.size.x, this.size.y);
     }
-
+    recalculate(canvas: HTMLCanvasElement){
+        this.size = new Vector2(canvas.width, canvas.height);
+    }
     update(timestamp : number) {
         this.animationtime -= timestamp;
         if(this.state == ViewportState.Shake){ 

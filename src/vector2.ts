@@ -31,4 +31,10 @@ export class Vector2 {
     public inverted(): Vector2 {
         return new Vector2(1 / this.x, 1 / this.y);
     }
+    public floor(): Vector2 {
+        return new Vector2(Math.floor(this.x), Math.floor(this.y));
+    }
+    public ceil(): Vector2 {
+        return new Vector2(Math.ceil(this.x), Math.ceil(this.y));
+    }
 }

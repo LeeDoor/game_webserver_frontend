@@ -30,6 +30,11 @@ export abstract class GameScreen {
             layer.draw();
         }
     }
+    recalculate(canvas: HTMLCanvasElement): void {
+        for(let layer of this.layers) {
+            layer.recalculate(canvas);
+        }
+    }
 
     abstract init(canvas: HTMLCanvasElement) : void; 
 

@@ -28,7 +28,7 @@ abstract class BaseDrawableGrid extends BaseGrid implements BaseAnimated {
     recalculate(vp: BaseViewport): void {
         let sideSize = Math.min(vp.size.x, vp.size.y);
         this.cellMargin = sideSize / 100;
-        this.cellInnerMargin = sideSize / 100;
+        this.cellInnerMargin = sideSize / 1000;
         this.cellSize
         = (sideSize - 2 * this.cellMargin) / this.size.x 
         - 2 * this.cellInnerMargin;
@@ -51,8 +51,8 @@ export class Grid extends BaseDrawableGrid implements BaseClickable {
     }
     click(clicked: Vector2, viewport: BaseViewport): void {
         clicked = viewport.toStandardPosition(clicked);
-        const cellpos: Vector2 = clicked.multed(this.size.multed(1 / this.gridSize));
-        console.log("clicked on " + cellpos);
+        const cellpos: Vector2 = clicked.multed(this.size.multed(1 / (this.gridSize - 2 * this.cellMargin))).floor();
+        console.log(cellpos);
     }
     isClicked(position: Vector2, viewport: BaseViewport): boolean {
         position = viewport.toStandardPosition(position);
