@@ -28,7 +28,7 @@ abstract class BaseDrawableGrid extends BaseGrid implements BaseAnimated {
     recalculate(vp: BaseViewport): void {
         let sideSize = Math.min(vp.size.x, vp.size.y);
         this.cellMargin = sideSize / 100;
-        this.cellInnerMargin = sideSize / 1000;
+        this.cellInnerMargin = sideSize / 100;
         this.cellSize
         = (sideSize - 2 * this.cellMargin) / this.size.x 
         - 2 * this.cellInnerMargin;
