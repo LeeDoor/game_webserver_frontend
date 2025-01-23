@@ -15,5 +15,5 @@ export class SpriteManager {
         new Sprite("abobus3.png"),
         new Sprite("abobus4.png"),
     ];
-    static grass = new Sprite("grass.png");
+    static grass = new Sprite("img/grass.png");
 }
