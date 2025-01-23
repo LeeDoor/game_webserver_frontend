@@ -9,17 +9,17 @@ class BaseGrid {
 
 abstract class BaseDrawableGrid extends BaseGrid implements BaseAnimated {
     update(timestamp: number): void {
-        
+
     }
-    cellMargin : number; // margin between viewport borders and grid begining
-    cellInnerMargin : number; // margin for each cell
-    cellSize : number; // size of each cell in pixels
+    cellMargin: number; // margin between viewport borders and grid begining
+    cellInnerMargin: number; // margin for each cell
+    cellSize: number; // size of each cell in pixels
     gridSize: number; // size of whole grid side
     cellShift: number; // shift for each cell
     draw(vp: BaseViewport): void {
         for (let x = 0; x < this.size.x; ++x) {
             for (let y = 0; y < this.size.y; ++y) {
-                vp.drawImage(sm.sprites.effects[0], 
+                vp.drawImage(sm.sprites.terrain[0],
                     this.getCellPosition(x, y),
                     new Vector2(this.cellSize));
             }
@@ -30,12 +30,12 @@ abstract class BaseDrawableGrid extends BaseGrid implements BaseAnimated {
         this.cellMargin = sideSize / 100;
         this.cellInnerMargin = sideSize / 100;
         this.cellSize
-        = (sideSize - 2 * this.cellMargin) / this.size.x 
-        - 2 * this.cellInnerMargin;
+            = (sideSize - 2 * this.cellMargin) / this.size.x
+            - 2 * this.cellInnerMargin;
         this.cellShift = (this.cellSize + 2 * this.cellInnerMargin);
         this.gridSize = this.cellInnerMargin + this.cellShift * this.size.x;
     }
-    getCellPosition(x: number, y: number) : Vector2 {
+    getCellPosition(x: number, y: number): Vector2 {
         return new Vector2(
             this.cellMargin + this.cellInnerMargin + this.cellShift * x,
             this.cellMargin + this.cellInnerMargin + this.cellShift * y
@@ -46,7 +46,7 @@ abstract class BaseDrawableGrid extends BaseGrid implements BaseAnimated {
 export class Grid extends BaseDrawableGrid implements BaseClickable {
     constructor(vp: BaseViewport) {
         super();
-        this.size = new Vector2 (8,8);
+        this.size = new Vector2(8, 8);
         this.recalculate(vp);
     }
     click(clicked: Vector2, viewport: BaseViewport): void {
