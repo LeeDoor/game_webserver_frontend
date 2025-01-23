@@ -1,6 +1,6 @@
 import { BaseViewport } from "./base_viewport.js"
 import { Vector2 } from "./vector2.js"
-import { SpriteManager } from "./sprite_manager.js"
+import { SpriteManager, sm } from "./sprite_manager.js"
 import { BaseAnimated, BaseClickable, BaseDrawable } from "./types.js";
 
 class BaseGrid {
@@ -19,7 +19,7 @@ abstract class BaseDrawableGrid extends BaseGrid implements BaseAnimated {
     draw(vp: BaseViewport): void {
         for (let x = 0; x < this.size.x; ++x) {
             for (let y = 0; y < this.size.y; ++y) {
-                vp.drawImage(SpriteManager.grass, 
+                vp.drawImage(sm.sprites.effects[0], 
                     this.getCellPosition(x, y),
                     new Vector2(this.cellSize));
             }
