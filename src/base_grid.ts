@@ -62,7 +62,7 @@ abstract class BaseDrawableGrid extends BaseGrid implements BaseDrawable {
     }
 }
 
-export class ClickableGrid extends BaseDrawableGrid implements BaseClickable {
+export abstract class BaseClickableGrid extends BaseDrawableGrid implements BaseClickable {
     constructor() {
         super();
     }
@@ -71,14 +71,17 @@ export class ClickableGrid extends BaseDrawableGrid implements BaseClickable {
     }
     click(clicked: Vector2, viewport: BaseViewport): void {
         clicked = viewport.toStandardPosition(clicked);
-        let ms = new Vector2(this.map_size.width, this.map_size.height);
-        const cellpos: Vector2 = clicked.multed(ms.multed(1 / (this.gridSize - 2 * this.cellMargin))).floor();
-        console.log(cellpos);
+        clicked = clicked.added(-this.cellMargin);
+        let cellclicked: Vector2 = clicked.multed(1 / this.cellShift).floor();
+        if (cellclicked.x * this.cellShift + this.cellInnerMargin < clicked.x && clicked.x < cellclicked.x * this.cellShift + this.cellInnerMargin + this.cellSize &&
+            cellclicked.y * this.cellShift + this.cellInnerMargin < clicked.y && clicked.y < cellclicked.y * this.cellShift + this.cellInnerMargin + this.cellSize) {
+            console.log(cellclicked);
+        }
     }
     isClicked(position: Vector2, viewport: BaseViewport): boolean {
         position = viewport.toStandardPosition(position);
-        return this.cellMargin < position.x && position.x < this.gridSize &&
-            this.cellMargin < position.y && position.y < this.gridSize;
+        return this.cellMargin < position.x && position.x < this.gridSize - this.cellMargin &&
+            this.cellMargin < position.y && position.y < this.gridSize - this.cellMargin;
     }
 }
 
