@@ -11,7 +11,4 @@ export class Cell {
         this.position = position;
         this.actor_id = actor_id;
     }
-    draw(vp: BaseViewport, pixpos: Vector2, pixsize: Vector2): void {
-        vp.drawImage(sm.sprites[this.type], pixpos, pixsize);
-    }
 }

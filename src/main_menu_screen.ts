@@ -10,16 +10,16 @@ enum MenuButtons {
 }
 
 export class MainMenuScreen extends GameScreen {
-    layer: Layer;
-    buttons: {[key in MenuButtons]: Button};
+    layer!: Layer;
+    buttons: { [key in MenuButtons]: Button };
 
     constructor(redirectionMethod: RedirectionMethod) {
         super(redirectionMethod);
         this.layers = [];
         this.buttons = {
-            [MenuButtons.Play]: new Button(new Vector2(0.3, 0.3), "MenuButton", 
-            () => {this.redirectionMethod(GameState.Queue);}, 
-            "Play", "coral"),
+            [MenuButtons.Play]: new Button(new Vector2(0.3, 0.3), "MenuButton",
+                () => { this.redirectionMethod(GameState.Queue); },
+                "Play", "coral"),
         }
     }
 
@@ -30,7 +30,7 @@ export class MainMenuScreen extends GameScreen {
     }
 
     private subscribeButtons() {
-        for(let [_, button] of Object.entries(this.buttons)) {
+        for (let [_, button] of Object.entries(this.buttons)) {
             this.layer.subscribeOnClick(button);
         }
     }

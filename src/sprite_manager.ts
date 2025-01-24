@@ -10,7 +10,7 @@ export class SpriteManager {
     sprites: { [key: string]: Sprite };
     names = ["gun", "bomb",
         "red_dino", "green_dino",
-        "grass", "rock"];
+        "grass", "wall"];
     constructor() {
         this.sprites = {};
         this.init(root);
