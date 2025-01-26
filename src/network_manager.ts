@@ -95,12 +95,6 @@ class NetworkManager {
                 if (!('error_name' in json)) {
                     res = new SessionState();
                     Object.assign(res, json);
-                    res.terrain = res.terrain.map(obj => {
-                        return Object.assign(new Cell(), obj);
-                    });
-                    res.players = res.players.map(player => {
-                        return Object.assign(new Player(), player);
-                    });
                 }
             });
         return res;
