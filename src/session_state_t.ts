@@ -1,4 +1,5 @@
 import { Cell } from "./cell.js";
+import { Player } from "./player.js";
 
 export class SessionState {
     constructor() {
@@ -7,6 +8,7 @@ export class SessionState {
         this.now_turn = "";
         this.state = "";
         this.terrain = [];
+        this.players = [];
     }
     map_size: {
         height: number;
@@ -16,4 +18,5 @@ export class SessionState {
     now_turn: string;
     state: string;
     terrain: Cell[];
+    players: Player[];
 }

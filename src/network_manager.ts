@@ -1,3 +1,5 @@
+import { Cell } from "./cell.js";
+import { Player } from "./player.js";
 import { SessionState } from "./session_state_t.js";
 class NetworkManager {
     readonly SERVER_URL = "http://localhost:8080";
@@ -93,6 +95,12 @@ class NetworkManager {
                 if (!('error_name' in json)) {
                     res = new SessionState();
                     Object.assign(res, json);
+                    res.terrain = res.terrain.map(obj => {
+                        return Object.assign(new Cell(), obj);
+                    });
+                    res.players = res.players.map(player => {
+                        return Object.assign(new Player(), player);
+                    });
                 }
             });
         return res;

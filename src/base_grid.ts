@@ -4,10 +4,28 @@ import { BaseAnimated, BaseClickable, BaseDrawable } from "./types.js";
 import { sm, Sprite } from "./sprite_manager.js";
 import { SessionState } from "./session_state_t.js";
 import { Cell } from "./cell.js";
+import { BaseObject } from "./base_object.js";
 
 class BaseGrid extends SessionState {
+    matrix: BaseObject[][][];
     constructor() {
         super();
+        this.matrix = [];
+    }
+
+    init(_: BaseViewport) {
+        for (let i = 0; i < this.map_size.width; ++i) {
+            this.matrix.push([]);
+            for (let j = 0; j < this.map_size.height; ++j) {
+                this.matrix[i].push([]);
+            }
+        }
+        for (let player of this.players) {
+            this.matrix[player.position.x][player.position.y].push(player);
+        }
+        for (let cell of this.terrain) {
+            this.matrix[cell.position.x][cell.position.y].push(cell);
+        }
     }
 }
 
@@ -25,14 +43,13 @@ abstract class BaseDrawableGrid extends BaseGrid implements BaseDrawable {
         this.cellSize = 0;
         this.gridSize = 0;
         this.cellShift = 0;
+        this.matrix = [];
     }
-
-    drawCell(cell: Cell, vp: BaseViewport): void {
-        vp.drawImage(sm.sprites[cell.type],
-            this.getCellPosition(cell.position),
-            new Vector2(this.cellSize));
+    init(vp: BaseViewport) {
+        super.init(vp);
+        this.recalculate(vp);
     }
-    draw(vp: BaseViewport): void {
+    drawBackground(vp: BaseViewport) {
         vp.ctx.globalAlpha = 0.5;
         for (let i = 0; i < this.map_size.width; ++i) {
             for (let j = 0; j < this.map_size.height; ++j) {
@@ -40,9 +57,20 @@ abstract class BaseDrawableGrid extends BaseGrid implements BaseDrawable {
             }
         }
         vp.ctx.globalAlpha = 1;
-        for (let cell of this.terrain) {
-            this.drawCell(cell, vp);
+    }
+    drawMatrix(vp: BaseViewport) {
+        for (let i = 0; i < this.map_size.width; ++i) {
+            for (let j = 0; j < this.map_size.height; ++j) {
+                for (let obj of this.matrix[i][j]) {
+                    obj.draw(vp);
+                }
+            }
         }
+    }
+
+    draw(vp: BaseViewport): void {
+        this.drawBackground(vp);
+        this.drawMatrix(vp);
     }
     recalculate(vp: BaseViewport): void {
         let sideSize = Math.min(vp.size.x, vp.size.y);
@@ -53,6 +81,14 @@ abstract class BaseDrawableGrid extends BaseGrid implements BaseDrawable {
             - 2 * this.cellInnerMargin;
         this.cellShift = (this.cellSize + 2 * this.cellInnerMargin);
         this.gridSize = this.cellInnerMargin + this.cellShift * this.map_size.width;
+
+        for (let cell of this.terrain) {
+            cell.recalculate(this.getCellPosition(cell.position), new Vector2(this.cellSize));
+        }
+
+        for (let player of this.players) {
+            //player.recalculate(this.cellSize);
+        }
     }
     getCellPosition(position: Vector2): Vector2 {
         return new Vector2(
@@ -65,9 +101,6 @@ abstract class BaseDrawableGrid extends BaseGrid implements BaseDrawable {
 export abstract class BaseClickableGrid extends BaseDrawableGrid implements BaseClickable {
     constructor() {
         super();
-    }
-    init(vp: BaseViewport) {
-        this.recalculate(vp);
     }
     click(clicked: Vector2, viewport: BaseViewport): void {
         clicked = viewport.toStandardPosition(clicked);

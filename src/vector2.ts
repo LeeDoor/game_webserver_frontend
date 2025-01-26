@@ -2,9 +2,9 @@ export class Vector2 {
     x: number;
     y: number;
 
-    constructor(x: number, y?: number) {
-        this.x = x;
-        this.y = y ?? x;
+    constructor(x?: number, y?: number) {
+        this.x = x ?? 0;
+        this.y = y ?? x ?? 0;
     }
     public lengthSquare() {
         return Math.pow(this.x, 2) + Math.pow(this.y, 2);
