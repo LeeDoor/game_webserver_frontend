@@ -21,8 +21,10 @@ export class MatchScreen extends GameScreen {
         this.layers = [this.uilayer, this.gamelayer];
         this.grid = new Grid();
         Network.game.getSessionState().then(ss => {
-            if (!ss)
+            if (!ss) { 
+                console.log('unable to load session');
                 return;
+            }
             Object.assign(this.grid, ss);
             this.grid.init(this.gamelayer.viewport);
             this.gamelayer.subscribeDraw(this.grid);

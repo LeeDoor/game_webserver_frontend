@@ -78,7 +78,7 @@ class NetworkManager {
             if (!response.ok) res = null;
             return response.json();
         }).then(json => {
-            if (res) res = json.sessionId;
+            res = json.sessionId ?? null;
         });
         return res;
     }

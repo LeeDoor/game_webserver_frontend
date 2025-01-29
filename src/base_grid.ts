@@ -43,7 +43,7 @@ class BaseGrid extends SessionState {
         this.forMatrix((obj: BaseObject) => obj.init());
     }
     forMatrix(func: (obj: BaseObject) => void) {
-        for (let i = 0; i < this.map_size.width; ++i) {
+        for (let i = this.map_size.width - 1; i >= 0; --i) {
             for (let j = 0; j < this.map_size.height; ++j) {
                 for (let obj of this.matrix[i][j]) {
                     func(obj);
