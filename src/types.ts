@@ -10,9 +10,7 @@ export enum Direction {
 
 export abstract class BaseDrawable {
     abstract draw(vp: BaseViewport): void;
-    abstract recalculate(vp: BaseViewport): void;
 }
-
 export abstract class BaseAnimated extends BaseDrawable { 
     abstract update(timestamp : number) : void;
 }

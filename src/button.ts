@@ -31,8 +31,6 @@ export class Button implements BaseClickable {
         vp.drawText(this.text, this.position.added(this.size.multed(0.5)), this.size.multed(0.9), "white");
     }
     
-    recalculate(vp: BaseViewport): void { }
-    
     click(position: Vector2, viewport: BaseViewport): void {
         this.clickCommand();
     }

@@ -28,9 +28,6 @@ export class Layer {
     }
     recalculate(canvas: HTMLCanvasElement) {
         this.viewport.recalculate(canvas);
-        for(let drawable of this.toDraw) {
-            drawable.recalculate(this.viewport);
-        }
     }
     onClick(position: Vector2){
         for (let clickable of this.toClick) {
