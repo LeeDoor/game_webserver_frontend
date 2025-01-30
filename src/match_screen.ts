@@ -4,6 +4,7 @@ import { GridManager } from "./grid_manager.js";
 import { Layer } from "./layer.js";
 import { Matrix } from "./matrix.js";
 import { MatrixDrawer } from "./matrix_drawer.js";
+import { MoveTipsDrawer } from "./move_tips_drawer.js";
 import * as Network from './network_manager.js';
 import { Vector2 } from "./vector2.js";
 
@@ -12,7 +13,8 @@ export class MatchScreen extends GameScreen {
     matrix!: Matrix;
     matrixDrawer!: MatrixDrawer;
     gridManager!: GridManager;
-
+    moveTipsDrawer!: MoveTipsDrawer;
+    
     constructor(redirectionMethod: RedirectionMethod) {
         super(redirectionMethod);
         this.layers = [];
@@ -33,9 +35,11 @@ export class MatchScreen extends GameScreen {
             this.gridManager = new GridManager(new Vector2(ss.map_size.width, ss.map_size.height));
             this.gridManager.recalculate(this.gamelayer.viewport);
             this.matrixDrawer = new MatrixDrawer(this.gridManager, this.matrix);
+            this.moveTipsDrawer = new MoveTipsDrawer(this.matrix, this.gridManager);
 
             this.gamelayer.subscribeRecalculate(this.gridManager);
             this.gamelayer.subscribeDraw(this.matrixDrawer);
+            this.gamelayer.subscribeDraw(this.moveTipsDrawer);
         });
     }
 }

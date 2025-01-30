@@ -1,4 +1,5 @@
 import { Cell } from "./cell.js";
+import { GameConsts } from "./game_consts.js";
 import { Player } from "./player.js";
 import { SessionState } from "./session_state_t.js";
 class NetworkManager {
@@ -96,6 +97,19 @@ class NetworkManager {
                     res = new SessionState();
                     Object.assign(res, json);
                 }
+            });
+        return res;
+    }
+    async gameConsts(): Promise<GameConsts> {
+        let res: GameConsts = new GameConsts();
+        await fetch(`${this.SERVER_URL}/api/game/game_consts`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(response => { return response.json(); })
+            .then(json => {
+                res = Object.assign(new GameConsts, json);
             });
         return res;
     }
