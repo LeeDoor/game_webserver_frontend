@@ -14,7 +14,7 @@ export class MatchScreen extends GameScreen {
     matrixDrawer!: MatrixDrawer;
     gridManager!: GridManager;
     moveTipsDrawer!: MoveTipsDrawer;
-    
+
     constructor(redirectionMethod: RedirectionMethod) {
         super(redirectionMethod);
         this.layers = [];
@@ -35,11 +35,13 @@ export class MatchScreen extends GameScreen {
             this.gridManager = new GridManager(new Vector2(ss.map_size.width, ss.map_size.height));
             this.gridManager.recalculate(this.gamelayer.viewport);
             this.matrixDrawer = new MatrixDrawer(this.gridManager, this.matrix);
-            this.moveTipsDrawer = new MoveTipsDrawer(this.matrix, this.gridManager);
 
             this.gamelayer.subscribeRecalculate(this.gridManager);
             this.gamelayer.subscribeDraw(this.matrixDrawer);
-            this.gamelayer.subscribeDraw(this.moveTipsDrawer);
+            Network.network.gameConsts().then(res => {
+                this.moveTipsDrawer = new MoveTipsDrawer(this.matrix, this.gridManager, res);
+                this.gamelayer.subscribeDraw(this.moveTipsDrawer);
+            });
         });
     }
 }

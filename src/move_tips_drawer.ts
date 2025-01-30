@@ -1,4 +1,5 @@
 import { BaseViewport } from "./base_viewport.js";
+import { GameConsts } from "./game_consts.js";
 import { GridManager } from "./grid_manager.js";
 import { Matrix } from "./matrix.js";
 import { MoveTips, MoveType } from "./move_tips.js";
@@ -15,8 +16,8 @@ export class MoveTipsDrawer implements BaseDrawable {
     moveTips: MoveTips;
     tips: Vector2[];
     
-    constructor(matrix: Matrix, gm: GridManager) {
-        this.moveTips = new MoveTips();
+    constructor(matrix: Matrix, gm: GridManager, gc: GameConsts) {
+        this.moveTips = new MoveTips(gc);
         this.tips = [];
         this.matrix = matrix;
         this.gm = gm;
