@@ -1,5 +1,3 @@
-import { BaseViewport } from "./base_viewport.js"
-import { sm } from "./sprite_manager.js";
 import { Vector2 } from "./vector2.js";
 
 export abstract class BaseObject {
@@ -12,5 +10,5 @@ export abstract class BaseObject {
         this.spriteScale = 1;
         this.drawSprite = "";
     }
-    abstract init(): void;
+    abstract init(): void; 
 }

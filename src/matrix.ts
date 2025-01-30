@@ -1,16 +1,12 @@
-import { BaseViewport } from "./base_viewport.js"
-import { Vector2 } from "./vector2.js"
-import { BaseAnimated, BaseClickable, BaseDrawable } from "./types.js";
-import { sm, Sprite } from "./sprite_manager.js";
 import { SessionState } from "./session_state_t.js";
 import { Cell } from "./cell.js";
 import { BaseObject } from "./base_object.js";
 import { Player } from "./player.js";
 import { GameObject } from "./game_object.js";
 
-class Matrix extends SessionState {
+export class Matrix extends SessionState {
     matrix: BaseObject[][][];
-    constructor(gridmanager: GridManager) {
+    constructor() {
         super();
         this.matrix = [];
     }
@@ -42,7 +38,7 @@ class Matrix extends SessionState {
         this.forMatrix((obj: BaseObject) => obj.init());
     }
     forMatrix(func: (obj: BaseObject) => void) {
-        for (let i = this.map_size.width - 1; i >= 0; --i) {
+        for (let i = 0; i < this.map_size.width; ++i) {
             for (let j = 0; j < this.map_size.height; ++j) {
                 for (let obj of this.matrix[i][j]) {
                     func(obj);

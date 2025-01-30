@@ -1,21 +1,24 @@
-import {BaseViewport} from "./base_viewport.js";
+import { BaseViewport } from "./base_viewport.js";
 import { Vector2 } from "./vector2.js";
 
 export enum Direction {
-    Up,
-    Right,
-    Down,
-    Left
+  Up,
+  Right,
+  Down,
+  Left
 }
 
-export abstract class BaseDrawable {
-    abstract draw(vp: BaseViewport): void;
+export abstract class BaseRecalculate {
+  abstract recalculate(vp: BaseViewport): void;
 }
-export abstract class BaseAnimated extends BaseDrawable { 
-    abstract update(timestamp : number) : void;
+export abstract class BaseDrawable {
+  abstract draw(vp: BaseViewport): void;
+}
+export abstract class BaseAnimated extends BaseDrawable {
+  abstract update(timestamp: number): void;
 }
 
 export abstract class BaseClickable extends BaseDrawable {
-    abstract click(clicked: Vector2, viewport: BaseViewport): void;
-    abstract isClicked(position: Vector2, viewport: BaseViewport): boolean;
+  abstract click(clicked: Vector2, viewport: BaseViewport): void;
+  abstract isClicked(position: Vector2, viewport: BaseViewport): boolean;
 }

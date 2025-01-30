@@ -1,9 +1,10 @@
 import { BaseViewport, ViewportState } from "./base_viewport.js";
-import { BaseAnimated, BaseClickable, BaseDrawable } from "./types.js";
+import { BaseAnimated, BaseClickable, BaseDrawable, BaseRecalculate } from "./types.js";
 import { Vector2 } from "./vector2.js";
 
 export class Layer {
     viewport: BaseViewport;
+    toRecalculate: BaseRecalculate[];
     toDraw: BaseDrawable[];
     toUpdate: BaseAnimated[];
     toClick: BaseClickable[];
@@ -13,31 +14,35 @@ export class Layer {
         this.toDraw = [];
         this.toUpdate = [];
         this.toClick = [];
+        this.toRecalculate = [];
     }
 
-    draw(){
+    draw() {
         this.viewport.clearScreen();
-        for(let drawable of this.toDraw) {
+        for (let drawable of this.toDraw) {
             drawable.draw(this.viewport);
         }
     }
     update(timestamp: number) {
-        for(let animated of this.toUpdate) {
+        for (let animated of this.toUpdate) {
             animated.update(timestamp);
         }
     }
     recalculate(canvas: HTMLCanvasElement) {
         this.viewport.recalculate(canvas);
+        for (let rec of this.toRecalculate) {
+            rec.recalculate(this.viewport);
+        }
     }
-    onClick(position: Vector2){
+    onClick(position: Vector2) {
         for (let clickable of this.toClick) {
-            if(clickable.isClicked(position, this.viewport)) {
+            if (clickable.isClicked(position, this.viewport)) {
                 clickable.click(position, this.viewport);
             }
         }
     }
     subscribeDraw(drawable: BaseDrawable) {
-        if(this.toDraw.indexOf(drawable) == -1){
+        if (this.toDraw.indexOf(drawable) == -1) {
             this.toDraw.push(drawable);
             return true;
         }
@@ -45,7 +50,7 @@ export class Layer {
     }
     subscribeUpdate(animated: BaseAnimated) {
         this.subscribeDraw(animated);
-        if(this.toUpdate.indexOf(animated) == -1){
+        if (this.toUpdate.indexOf(animated) == -1) {
             this.toUpdate.push(animated);
             return true;
         }
@@ -53,8 +58,15 @@ export class Layer {
     }
     subscribeOnClick(clickable: BaseClickable) {
         this.subscribeDraw(clickable);
-        if(this.toClick.indexOf(clickable) == -1){
+        if (this.toClick.indexOf(clickable) == -1) {
             this.toClick.push(clickable);
+            return true;
+        }
+        return false;
+    }
+    subscribeRecalculate(recal: BaseRecalculate) {
+        if (this.toRecalculate.indexOf(recal) == -1) {
+            this.toRecalculate.push(recal);
             return true;
         }
         return false;
