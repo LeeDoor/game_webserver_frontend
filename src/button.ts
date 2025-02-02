@@ -1,4 +1,4 @@
-import { BaseAnimated, BaseClickable } from "./types.js";
+import { BaseClickable } from "./types.js";
 import { Vector2 } from "./vector2.js";
 import { BaseViewport } from "./base_viewport.js";
 

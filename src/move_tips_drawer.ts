@@ -40,4 +40,9 @@ export class MoveTipsDrawer implements BaseDrawable {
             vp.drawRect(this.gm.cellPos(tip), new Vector2(this.gm.cellSize), "rgba(0, 0, 255, 0.3)");
         }
     }
+
+    notifyMoveType(moveType: MoveType) {
+        this.moveType = moveType;
+        this.update();
+    }
 }

@@ -6,12 +6,14 @@ import { Vector2 } from "./vector2.js";
 export enum MoveType{
     Walk,
     Bomb,
-    Gun
+    Gun,
+    Resign
 }
 
 enum CellSpread {
     Axial,
-    Square
+    Square,
+    None
 } 
 
 export class MoveTips {
@@ -60,6 +62,8 @@ export class MoveTips {
             case MoveType.Bomb:
             case MoveType.Gun:
                 return matrix.matrix[cell.x][cell.y].length == 0;
+            case MoveType.Resign:
+                return true;
         }
     }
     getCellSpread(mt: MoveType): CellSpread {
@@ -69,6 +73,8 @@ export class MoveTips {
                 return CellSpread.Square;
             case MoveType.Walk:
                 return CellSpread.Axial;
+            case MoveType.Resign:
+                return CellSpread.None;
         }
     }
     getDistance(mt: MoveType): number {
@@ -79,6 +85,8 @@ export class MoveTips {
                 return this.gc.bomb_place_radius;
             case MoveType.Walk:
                 return 1;
+            case MoveType.Resign:
+                return 0;
         }
     }
 }

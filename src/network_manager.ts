@@ -115,7 +115,7 @@ class NetworkManager {
     }
 }
 
-type Notify = () => void;
+type JoinMatchNotify = () => void;
 export class GameManager {
     sessionId: string | null = null;
 
@@ -132,7 +132,7 @@ export class GameManager {
         return sessionState;
     }
 
-    async joinMatch(onEnqueued?: Notify, onFound?: Notify): Promise<boolean> {
+    async joinMatch(onEnqueued?: JoinMatchNotify, onFound?: JoinMatchNotify): Promise<boolean> {
         let token = account.ld.token;
         if (!token)
             return false;
