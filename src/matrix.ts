@@ -46,4 +46,7 @@ export class Matrix extends SessionState {
             }
         }
     }
+    findPlayer(login: string): Player | null {
+        return this.players.find((player: Player) => player.login == login) ?? null;
+    }
 }

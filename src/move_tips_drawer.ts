@@ -16,14 +16,13 @@ export class MoveTipsDrawer implements IDrawable {
     moveTips: MoveTips;
     tips: Vector2[];
     
-    constructor(matrix: Matrix, gm: GridManager, gc: GameConsts) {
-        this.moveTips = new MoveTips(gc);
+    constructor(mt: MoveTips, matrix: Matrix, gm: GridManager) {
+        this.moveTips = mt;
         this.tips = [];
         this.matrix = matrix;
         this.gm = gm;
         this.moveType = MoveType.Walk;
-        this.player = this.matrix.players.find(
-            (player: Player) => player.login == account.ld.login) ?? new Player();
+        this.player = this.matrix.findPlayer(account.ld.login) ?? new Player();
         if (this.player.login != account.ld.login) {
             console.log("player not found in MoveTipsDrawer");
         }

@@ -5,7 +5,8 @@ import { GridManager } from "./grid_manager.js";
 import { Layer } from "./layer.js";
 import { Matrix } from "./matrix.js";
 import { MatrixDrawer } from "./matrix_drawer.js";
-import { MoveType } from "./move_tips.js";
+import { MoveManager } from "./move_manager.js";
+import { MoveTips, MoveType } from "./move_tips.js";
 import { MoveTipsDrawer } from "./move_tips_drawer.js";
 import * as Network from './network_manager.js';
 import { ScreenButtonsManager } from "./screen_buttons_manager.js";
@@ -18,6 +19,7 @@ export class MatchScreen extends GameScreen {
     gridManager!: GridManager;
     moveTipsDrawer!: MoveTipsDrawer;
     gridClickRecorder!: GridClickRecorder;
+    moveManager!: MoveManager;
     buttonsManager: ScreenButtonsManager;
 
     constructor(redirectionMethod: RedirectionMethod) {
@@ -26,34 +28,38 @@ export class MatchScreen extends GameScreen {
         this.buttonsManager = new ScreenButtonsManager();
     }
 
-    init(canvas: HTMLCanvasElement) {
+    async init(canvas: HTMLCanvasElement) {
         this.gamelayer = new Layer(new GameViewport(canvas));
         this.layers = [this.gamelayer];
         this.buttonsManager.init();
 
-        Network.game.getSessionState().then(ss => {
-            if (!ss) {
-                console.log('unable to load session');
-                return;
-            }
-            this.matrix = new Matrix();
-            Object.assign(this.matrix, ss);
-            this.matrix.init();
-            this.gridManager = new GridManager(new Vector2(ss.map_size.width, ss.map_size.height));
-            this.gridManager.recalculate(this.gamelayer.viewport);
-            this.matrixDrawer = new MatrixDrawer(this.gridManager, this.matrix);
+        let consts = await Network.network.gameConsts();
+        let ss = await Network.game.getSessionState();
+        let moveTips = new MoveTips(consts);
+        if (!ss) {
+            console.log('unable to load session');
+            return;
+        }
+        this.matrix = new Matrix();
+        Object.assign(this.matrix, ss);
+        this.matrix.init();
+        this.gridManager = new GridManager(new Vector2(ss.map_size.width, ss.map_size.height));
+        this.gridManager.recalculate(this.gamelayer.viewport);
+        this.matrixDrawer = new MatrixDrawer(this.gridManager, this.matrix);
+        this.gridClickRecorder = new GridClickRecorder(this.gridManager);
+        this.moveTipsDrawer = new MoveTipsDrawer(moveTips, this.matrix, this.gridManager);
+        this.moveManager = new MoveManager(this.matrix, moveTips);
 
-            this.gamelayer.subscribeRecalculate(this.gridManager);
-            this.gamelayer.subscribeDraw(this.matrixDrawer);
+        this.subscribeDependencies();
+    }
+    subscribeDependencies() {
+        this.gamelayer.subscribeRecalculate(this.gridManager);
+        this.gamelayer.subscribeDraw(this.matrixDrawer);
+        this.gamelayer.subscribeClick(this.gridClickRecorder);
+        this.gamelayer.subscribeDraw(this.moveTipsDrawer);
 
-            this.gridClickRecorder = new GridClickRecorder(this.gridManager);
-            this.gridClickRecorder.subscribe((p: Vector2 | null) => console.log(p));
-            this.gamelayer.subscribeClick(this.gridClickRecorder);
-            Network.network.gameConsts().then(res => {
-                this.moveTipsDrawer = new MoveTipsDrawer(this.matrix, this.gridManager, res);
-                this.buttonsManager.subscribe((mt: MoveType) => this.moveTipsDrawer.notifyMoveType(mt));
-                this.gamelayer.subscribeDraw(this.moveTipsDrawer);
-            });
-        });
+        this.gridClickRecorder.subscribe((p: Vector2 | null) => this.moveManager.onCellSelected(p));
+        this.buttonsManager.subscribe((mt: MoveType) => this.moveTipsDrawer.notifyMoveType(mt));
+        this.buttonsManager.subscribe((mt: MoveType) => this.moveManager.onMoveTypeChanged(mt));
     }
 }

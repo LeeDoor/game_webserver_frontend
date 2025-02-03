@@ -17,7 +17,7 @@ enum CellSpread {
 } 
 
 export class MoveTips {
-    gc: GameConsts;
+    private gc: GameConsts;
     constructor(gc: GameConsts) {
         this.gc = gc; 
     }
@@ -56,7 +56,7 @@ export class MoveTips {
         }
         return res;
     }
-    matchRestrictions(cell: Vector2, matrix: Matrix, moveType: MoveType): boolean {
+    private matchRestrictions(cell: Vector2, matrix: Matrix, moveType: MoveType): boolean {
         switch(moveType) {
             case MoveType.Walk:
             case MoveType.Bomb:
@@ -66,7 +66,7 @@ export class MoveTips {
                 return true;
         }
     }
-    getCellSpread(mt: MoveType): CellSpread {
+    private getCellSpread(mt: MoveType): CellSpread {
         switch(mt) {
             case MoveType.Gun:
             case MoveType.Bomb:
@@ -77,7 +77,7 @@ export class MoveTips {
                 return CellSpread.None;
         }
     }
-    getDistance(mt: MoveType): number {
+    private getDistance(mt: MoveType): number {
         switch(mt) {
             case MoveType.Gun:
                 return this.gc.gun_place_radius;
