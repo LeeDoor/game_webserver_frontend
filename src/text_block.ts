@@ -1,15 +1,14 @@
 import { BaseViewport } from "./base_viewport.js";
-import { BaseDrawable } from "./types.js";
+import { IDrawable } from "./types.js";
 import { Vector2 } from "./vector2.js";
 
-export class TextBlock extends BaseDrawable {
+export class TextBlock implements IDrawable {
     text: string;
     position: Vector2;
     size: Vector2;
     color: string;
 
     constructor(text: string, size: Vector2, position = new Vector2(0), color = "white"){
-        super();
         this.text = text;
         this.size = size;
         this.position = position;

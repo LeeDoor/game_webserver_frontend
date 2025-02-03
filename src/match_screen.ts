@@ -1,5 +1,6 @@
 import { GameScreen, RedirectionMethod } from "./game_screen.js";
 import { GameViewport } from "./game_viewport.js";
+import { GridClickRecorder } from "./grid_click_recorder.js";
 import { GridManager } from "./grid_manager.js";
 import { Layer } from "./layer.js";
 import { Matrix } from "./matrix.js";
@@ -16,6 +17,7 @@ export class MatchScreen extends GameScreen {
     matrixDrawer!: MatrixDrawer;
     gridManager!: GridManager;
     moveTipsDrawer!: MoveTipsDrawer;
+    gridClickRecorder!: GridClickRecorder;
     buttonsManager: ScreenButtonsManager;
 
     constructor(redirectionMethod: RedirectionMethod) {
@@ -43,6 +45,10 @@ export class MatchScreen extends GameScreen {
 
             this.gamelayer.subscribeRecalculate(this.gridManager);
             this.gamelayer.subscribeDraw(this.matrixDrawer);
+
+            this.gridClickRecorder = new GridClickRecorder(this.gridManager);
+            this.gridClickRecorder.subscribe((p: Vector2 | null) => console.log(p));
+            this.gamelayer.subscribeClick(this.gridClickRecorder);
             Network.network.gameConsts().then(res => {
                 this.moveTipsDrawer = new MoveTipsDrawer(this.matrix, this.gridManager, res);
                 this.buttonsManager.subscribe((mt: MoveType) => this.moveTipsDrawer.notifyMoveType(mt));

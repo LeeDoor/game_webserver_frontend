@@ -5,10 +5,10 @@ import { Matrix } from "./matrix.js";
 import { MoveTips, MoveType } from "./move_tips.js";
 import { account } from "./network_manager.js";
 import { Player } from "./player.js";
-import { BaseDrawable } from "./types.js";
+import { IDrawable } from "./types.js";
 import { Vector2 } from "./vector2.js";
 
-export class MoveTipsDrawer implements BaseDrawable {
+export class MoveTipsDrawer implements IDrawable {
     matrix: Matrix;
     gm: GridManager;
     moveType: MoveType;

@@ -3,10 +3,10 @@ import { BaseViewport } from "./base_viewport.js";
 import { GridManager } from "./grid_manager.js";
 import { Matrix } from "./matrix.js";
 import { sm } from "./sprite_manager.js";
-import { BaseDrawable } from "./types.js";
+import { IDrawable } from "./types.js";
 import { Vector2 } from "./vector2.js";
 
-export class MatrixDrawer implements BaseDrawable {
+export class MatrixDrawer implements IDrawable {
     gm: GridManager;
     matrix: Matrix;
     constructor(gridManager: GridManager, matrix: Matrix) {

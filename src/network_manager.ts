@@ -1,6 +1,4 @@
-import { Cell } from "./cell.js";
 import { GameConsts } from "./game_consts.js";
-import { Player } from "./player.js";
 import { SessionState } from "./session_state_t.js";
 class NetworkManager {
     readonly SERVER_URL = "http://localhost:8080";

@@ -1,10 +1,10 @@
-import { BaseClickable } from "./types.js";
+import { IClickable, IDrawable } from "./types.js";
 import { Vector2 } from "./vector2.js";
 import { BaseViewport } from "./base_viewport.js";
 
 export type ButtonSize = Vector2 | "MenuButton"; 
 export type ClickMethod = () => void;
-export class Button implements BaseClickable {
+export class Button implements IClickable, IDrawable {
     position: Vector2;
     size: Vector2;
     text: string;

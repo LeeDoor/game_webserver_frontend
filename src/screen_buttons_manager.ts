@@ -1,3 +1,4 @@
+import { IObservable } from "./i_observable.js";
 import { MoveType } from "./move_tips.js";
 
 export type ButtonNotify = (mt: MoveType) => void;
@@ -21,14 +22,13 @@ class ScreenButton {
     }
 }
 
-export class ScreenButtonsManager {
+export class ScreenButtonsManager extends IObservable<MoveType>{
     buttons: ScreenButton[]; 
     moveType: MoveType;
-    subscribers: ButtonNotify[];
     constructor() {
+        super();
         this.buttons = [];
         this.moveType = MoveType.Walk;
-        this.subscribers = [];
     }
 
     init() {
@@ -45,13 +45,5 @@ export class ScreenButtonsManager {
             this.moveType = moveType;
             this.notify(moveType);
         }
-    }
-    notify(moveType: MoveType) {
-        for(let notification of this.subscribers) {
-            notification(moveType);
-        }
-    }
-    subscribe(notif: ButtonNotify) {
-        this.subscribers.push((mt: MoveType) => notif(mt));
     }
 }
