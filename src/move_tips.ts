@@ -4,10 +4,10 @@ import { Player } from "./player.js";
 import { Vector2 } from "./vector2.js";
 
 export enum MoveType{
-    Walk,
-    Bomb,
-    Gun,
-    Resign
+    Walk = "walk",
+    Bomb = "place_bomb",
+    Gun = "place_gun",
+    Resign = "resign"
 }
 
 enum CellSpread {

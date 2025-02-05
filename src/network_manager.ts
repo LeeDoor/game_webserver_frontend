@@ -1,5 +1,31 @@
 import { GameConsts } from "./game_consts.js";
+import { MoveType } from "./move_tips.js";
 import { SessionState } from "./session_state_t.js";
+import { Direction } from "./types.js";
+import { Vector2 } from "./vector2.js";
+
+export class MoveError{
+    error_name: string;
+    description: string;
+
+    constructor() {
+        this.error_name = "";
+        this.description = "";
+    }
+}
+
+export class MoveData {
+    moveType: MoveType;
+    position?: Vector2;
+    direction?: Direction; 
+
+    constructor(mt: MoveType, pos?: Vector2, dir?: Direction) {
+       this.moveType = mt;
+       this.position = pos;
+       this.direction = dir;
+    }
+}
+
 class NetworkManager {
     readonly SERVER_URL = "http://localhost:8080";
 
@@ -109,6 +135,22 @@ class NetworkManager {
             .then(json => {
                 res = Object.assign(new GameConsts, json);
             });
+        return res; 
+    }
+    async move(data: MoveData, sessionId: string) : Promise<MoveError | null> {
+        let res: MoveError | null = null;
+        await fetch(`${this.SERVER_URL}/api/game/move?sessionId=${sessionId}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        }).then(response => response.json())
+        .then(json => {
+            if('error_name' in json){
+                res = Object.assign(new MoveError(), json);
+            }
+        });
         return res;
     }
 }
