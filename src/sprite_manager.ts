@@ -8,7 +8,7 @@ export class Sprite {
 }
 export class SpriteManager {
     sprites: { [key: string]: Sprite };
-    names = ["gun", "bomb",
+    names = ["gun", "bomb", "bullet",
         "red_dino", "green_dino",
         "grass", "wall"];
     constructor() {

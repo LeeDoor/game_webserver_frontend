@@ -15,12 +15,12 @@ export class MoveError{
 }
 
 export class MoveData {
-    moveType: MoveType;
+    move_type: MoveType;
     position?: Vector2;
     direction?: Direction; 
 
     constructor(mt: MoveType, pos?: Vector2, dir?: Direction) {
-       this.moveType = mt;
+       this.move_type= mt;
        this.position = pos;
        this.direction = dir;
     }
@@ -137,12 +137,13 @@ class NetworkManager {
             });
         return res; 
     }
-    async move(data: MoveData, sessionId: string) : Promise<MoveError | null> {
+    async move(data: MoveData, token: string, sessionId: string) : Promise<MoveError | null> {
         let res: MoveError | null = null;
         await fetch(`${this.SERVER_URL}/api/game/move?sessionId=${sessionId}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
             },
             body: JSON.stringify(data),
         }).then(response => response.json())
