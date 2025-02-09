@@ -1,3 +1,4 @@
+import { sessionStateFromAny } from "./build_object.js";
 import { createEvent, EventList } from "./event_list.js";
 import { GameConsts } from "./game_consts.js";
 import { MoveType } from "./move_tips.js";
@@ -119,8 +120,7 @@ class NetworkManager {
         }).then(response => { return response.json(); })
             .then(json => {
                 if (!('error_name' in json)) {
-                    res = new SessionState();
-                    Object.assign(res, json);
+                    res = sessionStateFromAny(json);
                 }
             });
         return res;

@@ -14,15 +14,6 @@ export class Matrix extends SessionState {
         this.actorIdArray = [];
     }
     init() {
-        this.terrain = this.terrain.map(obj => {
-            return Object.assign(new Cell(), obj);
-        });
-        this.players = this.players.map(obj => {
-            return Object.assign(new Player(), obj);
-        });
-        this.objects = this.objects.map(obj => {
-            return Object.assign(new GameObject(), obj);
-        });
         for (let i = 0; i < this.map_size.width; ++i) {
             this.matrix.push([]);
             for (let j = 0; j < this.map_size.height; ++j) {

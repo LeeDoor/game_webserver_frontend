@@ -11,7 +11,7 @@ export class GameUpdateNotifier extends IObservable<EventList> {
         this.capture();
     }
     capture(){
-        network.sessionStateChange(game.sessionId!, account.ld.token!, this.matrix.move_number)
+        network.sessionStateChange(game.sessionId!, account.ld.token!, this.matrix.move_number + 1)
             .then((el: EventList | null) => this.handleEventList(el));
     }
     handleEventList(el: EventList | null) {

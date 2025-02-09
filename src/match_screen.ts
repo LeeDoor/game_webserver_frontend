@@ -61,8 +61,8 @@ export class MatchScreen extends GameScreen {
     subscribeDependencies() {
         this.gamelayer.subscribeRecalculate(this.gridManager);
         this.gamelayer.subscribeDraw(this.matrixDrawer);
-        this.gamelayer.subscribeClick(this.gridClickRecorder);
         this.gamelayer.subscribeDraw(this.moveTipsDrawer);
+        this.gamelayer.subscribeClick(this.gridClickRecorder);
         this.gridClickRecorder.subscribe((p: Vector2 | null) => this.moveManager.onCellSelected(p));
         this.buttonsManager.subscribe((mt: MoveType) => this.moveTipsDrawer.notifyMoveType(mt));
         this.buttonsManager.subscribe((mt: MoveType) => this.moveManager.onMoveTypeChanged(mt));

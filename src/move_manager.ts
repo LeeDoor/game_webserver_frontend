@@ -46,7 +46,9 @@ export class MoveManager {
                 if(this.prevCell){
                     let dir: Direction | null = this.getDirection(cell, this.prevCell);
                     if(!dir) return;
-                    return this.sendMove(this.prevCell, dir);
+                    let prevCell = this.prevCell;
+                    this.prevCell = null;
+                    return this.sendMove(prevCell, dir);
                 } 
                 this.prevCell = cell;
             } break;
