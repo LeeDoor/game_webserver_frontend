@@ -1,7 +1,7 @@
 import { EventApplier } from "./event_applier.js";
 import { EventList } from "./event_list.js";
-import { GameScreen, RedirectionMethod } from "./game_screen.js";
-import { GameUpdateNotifier } from "./game_update_notifier.js";
+import { BaseScreen, GameState, RedirectionMethod } from "./base_screen.js";
+import { StateUpdateNotifier } from "./state_update_notifier.js";
 import { GameViewport } from "./game_viewport.js";
 import { GridClickRecorder } from "./grid_click_recorder.js";
 import { GridManager } from "./grid_manager.js";
@@ -15,7 +15,7 @@ import * as Network from './network_manager.js';
 import { ScreenButtonsManager } from "./screen_buttons_manager.js";
 import { Vector2 } from "./vector2.js";
 
-export class MatchScreen extends GameScreen {
+export class MatchScreen extends BaseScreen {
     gamelayer!: Layer;
     matrix!: Matrix;
     matrixDrawer!: MatrixDrawer;
@@ -23,28 +23,27 @@ export class MatchScreen extends GameScreen {
     moveTipsDrawer!: MoveTipsDrawer;
     gridClickRecorder!: GridClickRecorder;
     moveManager!: MoveManager;
-    gameUpdateNotifier!: GameUpdateNotifier;
+    gameUpdateNotifier!: StateUpdateNotifier;
     eventApplier!: EventApplier;
-    buttonsManager: ScreenButtonsManager;
+    buttonsManager!: ScreenButtonsManager;
 
     constructor(redirectionMethod: RedirectionMethod) {
         super(redirectionMethod);
         this.layers = [];
-        this.buttonsManager = new ScreenButtonsManager();
     }
 
     async init(canvas: HTMLCanvasElement) {
         this.gamelayer = new Layer(new GameViewport(canvas));
         this.layers = [this.gamelayer];
-        this.buttonsManager.init();
-
         let consts = await Network.network.gameConsts();
-        let ss = await Network.game.getSessionState();
         let moveTips = new MoveTips(consts);
+        let ss = await Network.game.getSessionState();
         if (!ss) {
             console.log('unable to load session');
             return;
         }
+        this.buttonsManager = new ScreenButtonsManager();
+        this.buttonsManager.init();
         this.matrix = new Matrix();
         Object.assign(this.matrix, ss);
         this.matrix.init();
@@ -54,7 +53,7 @@ export class MatchScreen extends GameScreen {
         this.gridClickRecorder = new GridClickRecorder(this.gridManager);
         this.moveTipsDrawer = new MoveTipsDrawer(moveTips, this.matrix, this.gridManager);
         this.moveManager = new MoveManager(this.matrix, moveTips);
-        this.gameUpdateNotifier = new GameUpdateNotifier(this.matrix);
+        this.gameUpdateNotifier = new StateUpdateNotifier(this.matrix, (gs: GameState) => this.redirectionMethod(gs));
         this.eventApplier = new EventApplier(this.matrix);
         this.subscribeDependencies();
     }

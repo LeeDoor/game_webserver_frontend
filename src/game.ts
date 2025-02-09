@@ -1,15 +1,16 @@
 import * as Screen from "./canvas.js";
 import { LoginScreen } from "./login_screen.js";
-import { GameScreen, FRAME_INTERVAL, GameState } from "./game_screen.js";
+import { BaseScreen, FRAME_INTERVAL, GameState } from "./base_screen.js";
 import { MainMenuScreen } from "./main_menu_screen.js";
 import { Vector2 } from "./vector2.js";
 import { QueueScreen } from "./queue_screen.js";
 import { MatchScreen } from "./match_screen.js";
+import { GameResultsScreen } from "./results_screen.js";
 
 export class Game {
     prevTime: number;
     state: GameState;
-    readonly screens: { [key in GameState]: GameScreen };
+    readonly screens: { [key in GameState]: BaseScreen };
 
     constructor() {
         this.state = 0;
@@ -23,6 +24,7 @@ export class Game {
             [GameState.MainMenu]: new MainMenuScreen(redirectionFunc),
             [GameState.Queue]: new QueueScreen(redirectionFunc),
             [GameState.Match]: new MatchScreen(redirectionFunc),
+            [GameState.Result]: new GameResultsScreen(redirectionFunc),
         };
     }
     public start() {

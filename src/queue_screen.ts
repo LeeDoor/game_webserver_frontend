@@ -1,11 +1,11 @@
 import * as Network from "./network_manager.js";
-import { GameScreen, GameState, RedirectionMethod } from "./game_screen.js";
+import { BaseScreen, GameState, RedirectionMethod } from "./base_screen.js";
 import { Layer } from "./layer.js";
 import { TextBlock } from "./text_block.js";
 import { UIViewport } from "./ui_viewport.js";
 import { Vector2 } from "./vector2.js";
 
-export class QueueScreen extends GameScreen {
+export class QueueScreen extends BaseScreen {
     layer!: Layer;
     queueTB!: TextBlock;
 
@@ -13,7 +13,7 @@ export class QueueScreen extends GameScreen {
         super(redirectionMethod);
     }
     init(canvas: HTMLCanvasElement): void {
-        this.queueTB = new TextBlock("Enqueuing...", new Vector2(1, 0.1), new Vector2(0.5), "coral");
+        this.queueTB = new TextBlock("Enqueuing...");
         this.layer = new Layer(new UIViewport(canvas));
         this.layer.subscribeDraw(this.queueTB);
         this.layers = [this.layer];

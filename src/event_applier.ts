@@ -1,6 +1,6 @@
 import { BaseObject } from "./base_object.js";
-import { gameObjectFromEvent } from "./build_object.js";
 import * as Events from "./event_list.js";
+import { gameObjectFromEvent } from "./from_any.js";
 import { GameObject, ObjectType } from "./game_object.js";
 import { Matrix } from "./matrix.js";
 import { Player } from "./player.js";
@@ -15,7 +15,6 @@ export class EventApplier {
 
     onEventListCaptured(list: Events.EventList) {
         for(let e of list) {
-            new Promise(resolve => setTimeout(resolve, 1000));
             this.handleEvent(e);
         }
     }

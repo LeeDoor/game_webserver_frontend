@@ -1,5 +1,5 @@
-import { sessionStateFromAny } from "./build_object.js";
 import { createEvent, EventList } from "./event_list.js";
+import { sessionStateFromAny } from "./from_any.js";
 import { GameConsts } from "./game_consts.js";
 import { MoveType } from "./move_tips.js";
 import { SessionState } from "./session_state_t.js";
@@ -109,8 +109,8 @@ class NetworkManager {
         });
         return res;
     }
-    async sessionState(sessionId: string, token: string): Promise<SessionState | null> {
-        let res: SessionState | null = null;
+    async sessionState(sessionId: string, token: string): Promise<SessionState | string | null> {
+        let res: SessionState | string | null = null;
         await fetch(`${this.SERVER_URL}/api/game/session_state?sessionId=${sessionId}`, {
             method: 'GET',
             headers: {
@@ -119,6 +119,10 @@ class NetworkManager {
             }
         }).then(response => { return response.json(); })
             .then(json => {
+                if('winner' in json) {
+                    res = json.winner as string;
+                    return;
+                }
                 if (!('error_name' in json)) {
                     res = sessionStateFromAny(json);
                 }
@@ -175,6 +179,9 @@ class NetworkManager {
                         res.push(e); 
                 }
             }
+            if("state" in json && json.state == "finished") {
+                res = null;
+            }
         });
         return res;
     }
@@ -194,7 +201,13 @@ export class GameManager {
         if (!sessionState) {
             return null;
         }
-        return sessionState;
+        return sessionState as SessionState;
+    }
+
+    async getSessionResult(): Promise<string | null> {
+        let winner = await network.sessionState(this.sessionId!, account.ld.token!);
+        if(!winner) return null;
+        return winner as string;
     }
 
     async joinMatch(onEnqueued?: JoinMatchNotify, onFound?: JoinMatchNotify): Promise<boolean> {

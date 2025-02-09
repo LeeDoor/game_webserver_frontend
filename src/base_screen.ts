@@ -1,4 +1,3 @@
-import { BaseViewport } from "./base_viewport.js";
 import { Layer } from "./layer.js";
 import { Vector2 } from "./vector2.js";
 
@@ -6,12 +5,13 @@ export enum GameState {
     Login,
     MainMenu,
     Queue,
-    Match
+    Match,
+    Result
 }
 
 export type RedirectionMethod = (redirectTo: GameState) => void;
 
-export abstract class GameScreen {
+export abstract class BaseScreen {
     layers: Layer[];
     redirectionMethod: RedirectionMethod;
 

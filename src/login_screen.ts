@@ -1,11 +1,11 @@
-import { GameScreen, GameState, RedirectionMethod } from "./game_screen.js";
+import { BaseScreen, GameState, RedirectionMethod } from "./base_screen.js";
 import { Layer } from "./layer.js";
 import { TextBlock } from "./text_block.js";
 import { UIViewport } from "./ui_viewport.js";
 import { Vector2 } from "./vector2.js";
 import { account } from "./network_manager.js";
 
-export class LoginScreen extends GameScreen {
+export class LoginScreen extends BaseScreen {
     layer!: Layer;
     loadingTB!: TextBlock;
 

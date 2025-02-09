@@ -8,11 +8,11 @@ export class TextBlock implements IDrawable {
     size: Vector2;
     color: string;
 
-    constructor(text: string, size: Vector2, position = new Vector2(0), color = "white"){
+    constructor(text: string, size?: Vector2, position?: Vector2, color?: string){
         this.text = text;
-        this.size = size;
-        this.position = position;
-        this.color = color;
+        this.size = size ?? new Vector2(1, 0.1);
+        this.position = position ?? new Vector2(0.5);
+        this.color = color ?? "coral";
     }
 
     draw(vp: BaseViewport): void {

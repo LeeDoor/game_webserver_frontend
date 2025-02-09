@@ -1,13 +1,16 @@
+import { GameState, RedirectionMethod } from "./base_screen.js";
 import { EventList } from "./event_list.js";
 import { IObservable } from "./i_observable.js";
 import { Matrix } from "./matrix.js";
 import { account, game, network } from "./network_manager.js";
 
-export class GameUpdateNotifier extends IObservable<EventList> {
+export class StateUpdateNotifier extends IObservable<EventList> {
     matrix: Matrix;
-    constructor(mx: Matrix){
+    redirectionMethod: RedirectionMethod;
+    constructor(mx: Matrix, rm: RedirectionMethod){
         super();
         this.matrix = mx;
+        this.redirectionMethod = rm;
         this.capture();
     }
     capture(){
@@ -16,10 +19,10 @@ export class GameUpdateNotifier extends IObservable<EventList> {
     }
     handleEventList(el: EventList | null) {
        if(!el) {
-            console.log("event is broken");
+            this.redirectionMethod(GameState.Result);
             return;
-       }
-       this.notify(el);
+        }
+       this.notify(el as EventList);
        this.capture();
     }
 }

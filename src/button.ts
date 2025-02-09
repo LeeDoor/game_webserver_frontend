@@ -11,9 +11,8 @@ export class Button implements IClickable, IDrawable {
     color: string;
     clickCommand: ClickMethod;
 
-    constructor (position: Vector2, size: ButtonSize, command: ClickMethod, text = "", color = "green") {
+    constructor (position: Vector2, size: ButtonSize, command: ClickMethod, text = "", color = "coral") {
         this.clickCommand = command;
-        this.position = position;
         this.text = text;
         this.color = color;
         switch(size) {
@@ -24,6 +23,7 @@ export class Button implements IClickable, IDrawable {
                 this.size = size as Vector2;
                 break;
         }
+        this.position = position.added(this.size.multed(-0.5));
     }
 
     draw(vp: BaseViewport): void {
