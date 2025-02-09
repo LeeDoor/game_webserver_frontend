@@ -2,10 +2,10 @@ import { BaseViewport } from "./base_viewport.js";
 import { Vector2 } from "./vector2.js";
 
 export enum Direction {
-  Up,
-  Right,
-  Down,
-  Left
+  Up = "up",
+  Right = "right",
+  Down = "down",
+  Left = "left"
 }
 
 export interface IRecalculatable {

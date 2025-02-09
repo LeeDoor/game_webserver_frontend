@@ -1,4 +1,5 @@
 import { BaseObject } from "./base_object.js";
+import { Direction } from "./types.js";
 
 export enum ObjectType {
     bomb = "bomb",
@@ -6,13 +7,12 @@ export enum ObjectType {
     bullet = "bullet",
 }
 export class GameObject extends BaseObject {
-    actor_id: number;
     owner: string;
     type: ObjectType;
+    direction?: Direction;
 
     constructor() {
         super();
-        this.actor_id = 0;
         this.owner = "";
         this.type = ObjectType.bomb;
     }

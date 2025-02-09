@@ -1,4 +1,7 @@
+import { EventApplier } from "./event_applier.js";
+import { EventList } from "./event_list.js";
 import { GameScreen, RedirectionMethod } from "./game_screen.js";
+import { GameUpdateNotifier } from "./game_update_notifier.js";
 import { GameViewport } from "./game_viewport.js";
 import { GridClickRecorder } from "./grid_click_recorder.js";
 import { GridManager } from "./grid_manager.js";
@@ -20,6 +23,8 @@ export class MatchScreen extends GameScreen {
     moveTipsDrawer!: MoveTipsDrawer;
     gridClickRecorder!: GridClickRecorder;
     moveManager!: MoveManager;
+    gameUpdateNotifier!: GameUpdateNotifier;
+    eventApplier!: EventApplier;
     buttonsManager: ScreenButtonsManager;
 
     constructor(redirectionMethod: RedirectionMethod) {
@@ -49,7 +54,8 @@ export class MatchScreen extends GameScreen {
         this.gridClickRecorder = new GridClickRecorder(this.gridManager);
         this.moveTipsDrawer = new MoveTipsDrawer(moveTips, this.matrix, this.gridManager);
         this.moveManager = new MoveManager(this.matrix, moveTips);
-
+        this.gameUpdateNotifier = new GameUpdateNotifier(this.matrix);
+        this.eventApplier = new EventApplier(this.matrix);
         this.subscribeDependencies();
     }
     subscribeDependencies() {
@@ -57,9 +63,12 @@ export class MatchScreen extends GameScreen {
         this.gamelayer.subscribeDraw(this.matrixDrawer);
         this.gamelayer.subscribeClick(this.gridClickRecorder);
         this.gamelayer.subscribeDraw(this.moveTipsDrawer);
-
         this.gridClickRecorder.subscribe((p: Vector2 | null) => this.moveManager.onCellSelected(p));
         this.buttonsManager.subscribe((mt: MoveType) => this.moveTipsDrawer.notifyMoveType(mt));
         this.buttonsManager.subscribe((mt: MoveType) => this.moveManager.onMoveTypeChanged(mt));
+        this.gameUpdateNotifier.subscribe((el: EventList) => 
+            {this.eventApplier.onEventListCaptured(el);});
+        this.gameUpdateNotifier.subscribe((_: EventList) => 
+            {this.moveTipsDrawer.update();});
     }
 }

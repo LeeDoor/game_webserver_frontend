@@ -1,3 +1,4 @@
+import { createEvent, EventList } from "./event_list.js";
 import { GameConsts } from "./game_consts.js";
 import { MoveType } from "./move_tips.js";
 import { SessionState } from "./session_state_t.js";
@@ -150,6 +151,29 @@ class NetworkManager {
         .then(json => {
             if('error_name' in json){
                 res = Object.assign(new MoveError(), json);
+            }
+        });
+        return res;
+    }
+    async sessionStateChange(sessionId: string, token: string, fromMove: number): Promise<EventList | null> {
+        let res: EventList | null = null;
+        await fetch(`${this.SERVER_URL}/api/game/session_state_change?sessionId=${sessionId}&from_move=${fromMove}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+        }).then(response => {
+            if (!response.ok) res = null;
+            return response.json();
+        }).then(json => {
+            if(Array.isArray(json)) {
+                res = [];
+                for(let e of json as EventList) {
+                    let event = createEvent(e);
+                    if(event)
+                        res.push(e); 
+                }
             }
         });
         return res;
