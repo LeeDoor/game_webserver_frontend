@@ -68,6 +68,6 @@ export class MatchScreen extends BaseScreen {
         this.gameUpdateNotifier.subscribe((el: EventList) => 
             {this.eventApplier.onEventListCaptured(el);});
         this.gameUpdateNotifier.subscribe((_: EventList) => 
-            {this.moveTipsDrawer.update();});
+            {this.moveTipsDrawer.notifyCurrentPlayerChanged();});
     }
 }

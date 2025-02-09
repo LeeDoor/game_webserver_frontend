@@ -23,7 +23,7 @@ export class MoveManager {
         this.moveTips = moveTips;
         this.moveType = MoveType.Walk;
         this.prevCell = null;
-        this.player = this.matrix.findPlayer(account.ld.login) ?? new Player();
+        this.player = this.matrix.findPlayer((p) => p.login == account.ld.login) ?? new Player();
         if(this.player.login != account.ld.login) 
             console.log(`unable to find player ${account.ld.login} in move_manager.ts`);
     }

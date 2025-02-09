@@ -47,8 +47,8 @@ export class Matrix extends SessionState {
                 func(actor);
         }
     }
-    findPlayer(login: string): Player | null {
-        return this.players.find((player: Player) => player.login == login) ?? null;
+    findPlayer(comp: (p: Player) => boolean): Player | null {
+        return this.players.find(comp) ?? null;
     }
     createObject(obj: BaseObject) {
         this.matrix[obj.position.x][obj.position.y].push(obj);

@@ -60,8 +60,10 @@ export class EventApplier {
                 }
                 break;
         } 
-        console.log(e.event);
         this.matrix.move_number = Math.max(this.matrix.move_number, e.move_number);
+        if(e.event.includes('player_')) {
+            this.matrix.now_turn = this.matrix.findPlayer((pl: Player) => pl.actor_id != e.actor_id)!.login;
+        }
     }
     directionShift(dir: Direction): Vector2 {
         switch(dir) {

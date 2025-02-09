@@ -1,5 +1,4 @@
 import { BaseViewport } from "./base_viewport.js";
-import { GameConsts } from "./game_consts.js";
 import { GridManager } from "./grid_manager.js";
 import { Matrix } from "./matrix.js";
 import { MoveTips, MoveType } from "./move_tips.js";
@@ -15,23 +14,26 @@ export class MoveTipsDrawer implements IDrawable {
     player: Player;
     moveTips: MoveTips;
     tips: Vector2[];
-    
+    ourMove: boolean;
+
     constructor(mt: MoveTips, matrix: Matrix, gm: GridManager) {
         this.moveTips = mt;
         this.tips = [];
         this.matrix = matrix;
         this.gm = gm;
         this.moveType = MoveType.Walk;
-        this.player = this.matrix.findPlayer(account.ld.login) ?? new Player();
+        this.player = this.matrix.findPlayer((p) => p.login == account.ld.login) ?? new Player();
         if (this.player.login != account.ld.login) {
             console.log("player not found in MoveTipsDrawer");
         }
-
+        this.ourMove = this.player.login == this.matrix.now_turn;
         this.update();
     }
 
     update() {
-        this.tips = this.moveTips.getTips(this.matrix, this.moveType, this.player);
+        if(this.ourMove)
+            this.tips = this.moveTips.getTips(this.matrix, this.moveType, this.player);
+        else this.tips = [];
     }
 
     draw(vp: BaseViewport): void {
@@ -42,6 +44,10 @@ export class MoveTipsDrawer implements IDrawable {
 
     notifyMoveType(moveType: MoveType) {
         this.moveType = moveType;
+        this.update();
+    }
+    notifyCurrentPlayerChanged() {
+        this.ourMove = this.matrix.now_turn == this.player.login;
         this.update();
     }
 }
