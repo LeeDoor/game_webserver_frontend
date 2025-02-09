@@ -1,7 +1,6 @@
 import { Cell } from "./cell.js";
 import { GameObject } from "./game_object.js";
 import { Player } from "./player.js";
-import { Vector2 } from "./vector2.js";
 
 export class SessionState {
     map_size: {

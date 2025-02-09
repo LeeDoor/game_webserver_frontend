@@ -1,19 +1,18 @@
-import { BaseAnimated, BaseClickable } from "./types.js";
+import { IClickable, IDrawable } from "./types.js";
 import { Vector2 } from "./vector2.js";
 import { BaseViewport } from "./base_viewport.js";
 
 export type ButtonSize = Vector2 | "MenuButton"; 
 export type ClickMethod = () => void;
-export class Button implements BaseClickable {
+export class Button implements IClickable, IDrawable {
     position: Vector2;
     size: Vector2;
     text: string;
     color: string;
     clickCommand: ClickMethod;
 
-    constructor (position: Vector2, size: ButtonSize, command: ClickMethod, text = "", color = "green") {
+    constructor (position: Vector2, size: ButtonSize, command: ClickMethod, text = "", color = "coral") {
         this.clickCommand = command;
-        this.position = position;
         this.text = text;
         this.color = color;
         switch(size) {
@@ -24,6 +23,7 @@ export class Button implements BaseClickable {
                 this.size = size as Vector2;
                 break;
         }
+        this.position = position.added(this.size.multed(-0.5));
     }
 
     draw(vp: BaseViewport): void {

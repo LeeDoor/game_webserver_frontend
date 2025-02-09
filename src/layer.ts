@@ -1,13 +1,13 @@
 import { BaseViewport, ViewportState } from "./base_viewport.js";
-import { BaseAnimated, BaseClickable, BaseDrawable, BaseRecalculate } from "./types.js";
+import { IAnimated, IClickable, IDrawable, IRecalculatable } from "./types.js";
 import { Vector2 } from "./vector2.js";
 
 export class Layer {
     viewport: BaseViewport;
-    toRecalculate: BaseRecalculate[];
-    toDraw: BaseDrawable[];
-    toUpdate: BaseAnimated[];
-    toClick: BaseClickable[];
+    toRecalculate: IRecalculatable[];
+    toDraw: IDrawable[];
+    toUpdate: IAnimated[];
+    toClick: IClickable[];
 
     constructor(viewport: BaseViewport) {
         this.viewport = viewport;
@@ -41,14 +41,14 @@ export class Layer {
             }
         }
     }
-    subscribeDraw(drawable: BaseDrawable) {
+    subscribeDraw(drawable: IDrawable) {
         if (this.toDraw.indexOf(drawable) == -1) {
             this.toDraw.push(drawable);
             return true;
         }
         return false;
     }
-    subscribeUpdate(animated: BaseAnimated) {
+    subscribeUpdate(animated: IAnimated) {
         this.subscribeDraw(animated);
         if (this.toUpdate.indexOf(animated) == -1) {
             this.toUpdate.push(animated);
@@ -56,15 +56,14 @@ export class Layer {
         }
         return false;
     }
-    subscribeOnClick(clickable: BaseClickable) {
-        this.subscribeDraw(clickable);
+    subscribeClick(clickable: IClickable) {
         if (this.toClick.indexOf(clickable) == -1) {
             this.toClick.push(clickable);
             return true;
         }
         return false;
     }
-    subscribeRecalculate(recal: BaseRecalculate) {
+    subscribeRecalculate(recal: IRecalculatable) {
         if (this.toRecalculate.indexOf(recal) == -1) {
             this.toRecalculate.push(recal);
             return true;

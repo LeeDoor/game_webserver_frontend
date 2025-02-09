@@ -2,23 +2,23 @@ import { BaseViewport } from "./base_viewport.js";
 import { Vector2 } from "./vector2.js";
 
 export enum Direction {
-  Up,
-  Right,
-  Down,
-  Left
+  Up = "up",
+  Right = "right",
+  Down = "down",
+  Left = "left"
 }
 
-export abstract class BaseRecalculate {
-  abstract recalculate(vp: BaseViewport): void;
+export interface IRecalculatable {
+  recalculate(vp: BaseViewport): void;
 }
-export abstract class BaseDrawable {
-  abstract draw(vp: BaseViewport): void;
+export interface IDrawable {
+  draw(vp: BaseViewport): void;
 }
-export abstract class BaseAnimated extends BaseDrawable {
-  abstract update(timestamp: number): void;
+export interface IAnimated extends IDrawable {
+  update(timestamp: number): void;
 }
 
-export abstract class BaseClickable extends BaseDrawable {
-  abstract click(clicked: Vector2, viewport: BaseViewport): void;
-  abstract isClicked(position: Vector2, viewport: BaseViewport): boolean;
+export interface IClickable {
+  click(clicked: Vector2, viewport: BaseViewport): void;
+  isClicked(position: Vector2, viewport: BaseViewport): boolean;
 }

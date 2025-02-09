@@ -1,7 +1,33 @@
-import { Cell } from "./cell.js";
+import { createEvent, EventList } from "./event_list.js";
+import { sessionStateFromAny } from "./from_any.js";
 import { GameConsts } from "./game_consts.js";
-import { Player } from "./player.js";
+import { MoveType } from "./move_tips.js";
 import { SessionState } from "./session_state_t.js";
+import { Direction } from "./types.js";
+import { Vector2 } from "./vector2.js";
+
+export class MoveError{
+    error_name: string;
+    description: string;
+
+    constructor() {
+        this.error_name = "";
+        this.description = "";
+    }
+}
+
+export class MoveData {
+    move_type: MoveType;
+    position?: Vector2;
+    direction?: Direction; 
+
+    constructor(mt: MoveType, pos?: Vector2, dir?: Direction) {
+       this.move_type= mt;
+       this.position = pos;
+       this.direction = dir;
+    }
+}
+
 class NetworkManager {
     readonly SERVER_URL = "http://localhost:8080";
 
@@ -83,8 +109,8 @@ class NetworkManager {
         });
         return res;
     }
-    async sessionState(sessionId: string, token: string): Promise<SessionState | null> {
-        let res: SessionState | null = null;
+    async sessionState(sessionId: string, token: string): Promise<SessionState | string | null> {
+        let res: SessionState | string | null = null;
         await fetch(`${this.SERVER_URL}/api/game/session_state?sessionId=${sessionId}`, {
             method: 'GET',
             headers: {
@@ -93,9 +119,12 @@ class NetworkManager {
             }
         }).then(response => { return response.json(); })
             .then(json => {
+                if('winner' in json) {
+                    res = json.winner as string;
+                    return;
+                }
                 if (!('error_name' in json)) {
-                    res = new SessionState();
-                    Object.assign(res, json);
+                    res = sessionStateFromAny(json);
                 }
             });
         return res;
@@ -111,11 +140,54 @@ class NetworkManager {
             .then(json => {
                 res = Object.assign(new GameConsts, json);
             });
+        return res; 
+    }
+    async move(data: MoveData, token: string, sessionId: string) : Promise<MoveError | null> {
+        let res: MoveError | null = null;
+        await fetch(`${this.SERVER_URL}/api/game/move?sessionId=${sessionId}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(data),
+        }).then(response => response.json())
+        .then(json => {
+            if('error_name' in json){
+                res = Object.assign(new MoveError(), json);
+            }
+        });
+        return res;
+    }
+    async sessionStateChange(sessionId: string, token: string, fromMove: number): Promise<EventList | null> {
+        let res: EventList | null = null;
+        await fetch(`${this.SERVER_URL}/api/game/session_state_change?sessionId=${sessionId}&from_move=${fromMove}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+        }).then(response => {
+            if (!response.ok) res = null;
+            return response.json();
+        }).then(json => {
+            if(Array.isArray(json)) {
+                res = [];
+                for(let e of json as EventList) {
+                    let event = createEvent(e);
+                    if(event)
+                        res.push(e); 
+                }
+            }
+            if("state" in json && json.state == "finished") {
+                res = null;
+            }
+        });
         return res;
     }
 }
 
-type Notify = () => void;
+type JoinMatchNotify = () => void;
 export class GameManager {
     sessionId: string | null = null;
 
@@ -129,10 +201,16 @@ export class GameManager {
         if (!sessionState) {
             return null;
         }
-        return sessionState;
+        return sessionState as SessionState;
     }
 
-    async joinMatch(onEnqueued?: Notify, onFound?: Notify): Promise<boolean> {
+    async getSessionResult(): Promise<string | null> {
+        let winner = await network.sessionState(this.sessionId!, account.ld.token!);
+        if(!winner) return null;
+        return winner as string;
+    }
+
+    async joinMatch(onEnqueued?: JoinMatchNotify, onFound?: JoinMatchNotify): Promise<boolean> {
         let token = account.ld.token;
         if (!token)
             return false;

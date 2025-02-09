@@ -1,8 +1,8 @@
 import { BaseViewport } from "./base_viewport.js";
-import { BaseRecalculate } from "./types.js";
+import { IRecalculatable } from "./types.js";
 import { Vector2 } from "./vector2.js"
 
-export class GridManager implements BaseRecalculate {
+export class GridManager implements IRecalculatable {
     gridSize: Vector2;
     gridMargin: number; // margin between viewport borders and grid begining
     cellInnerMargin: number; // margin for each cell
@@ -18,6 +18,9 @@ export class GridManager implements BaseRecalculate {
         this.sideSize = 0;
         this.cellShift = 0;
     }
+    init(vp: BaseViewport) {
+        this.recalculate(vp);
+    } 
     recalculate(vp: BaseViewport): void {
         let sideSize = Math.min(vp.size.x, vp.size.y);
         this.gridMargin = sideSize / 100;
@@ -34,10 +37,14 @@ export class GridManager implements BaseRecalculate {
             this.gridMargin + this.cellInnerMargin + this.cellShift * cell.y
         );
     }
-    cellOnPos(position: Vector2): Vector2 | null {
+    isPosInGrid(position:Vector2): boolean {
         if (this.gridMargin >= position.x || position.x >= this.sideSize - this.gridMargin ||
             this.gridMargin >= position.y || position.y >= this.sideSize - this.gridMargin)
-            return null; // out of grid
+            return false;
+        return true;
+    }
+    cellOnPos(position: Vector2): Vector2 | null {
+        if(!this.isPosInGrid(position)) return null;
         position = position.added(-this.gridMargin);
         let cellposition = position.multed(1 / this.cellShift).floor(); // approximate position 
         if (cellposition.x * this.cellShift + this.cellInnerMargin < position.x
