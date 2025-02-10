@@ -53,7 +53,7 @@ export function createEvent(e: {event: string}): Event | null {
         case "player_resign":
         case "player_won":
         case "bomb_ticking":
-        case "player_explode":
+        case "bomb_explode":
         case "gun_waiting":
         case "gun_destroy":
         case "bullet_fly":

@@ -29,7 +29,7 @@ export class MoveData {
 }
 
 class NetworkManager {
-    readonly SERVER_URL = "http://localhost:8080";
+    readonly SERVER_URL = window.location.href.split('/').slice(0, 3).join('/'); 
 
     async login(ad: AccountData): Promise<string | null> {
         let response = await fetch(this.SERVER_URL + '/api/login', {
