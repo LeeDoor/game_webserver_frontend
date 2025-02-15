@@ -12,75 +12,53 @@ enum MoveDataReq {
 }
 
 export class MoveManager {
-    moveType: MoveType;
-    player: Player;
-    matrix: Matrix;
-    moveTips: MoveTips;
-    prevCell: Vector2 | null;
-
-    constructor(matrix: Matrix, moveTips: MoveTips) {
-        this.matrix = matrix;
-        this.moveTips = moveTips;
-        this.moveType = MoveType.Walk;
-        this.prevCell = null;
-        this.player = this.matrix.findPlayer((p) => p.login == account.ld.login) ?? new Player();
-        if(this.player.login != account.ld.login) 
-            console.log(`unable to find player ${account.ld.login} in move_manager.ts`);
+    constructor() {}
+    tryMove(pressedCells: Vector2[], moveType: MoveType): boolean {
+        if(!this.validatePressedCells(pressedCells, this.getRequirements(moveType))) return false;
+        this.sendMove(this.makeMoveData(pressedCells, moveType));
+        return true;
     }
-
-    onMoveTypeChanged(mt: MoveType) {
-        this.moveType = mt;
-        this.prevCell = null;
+    validatePressedCells(pressed: Vector2[], mdr: MoveDataReq) {
+        switch(mdr) {
+        case MoveDataReq.PositionDirection: 
+            return pressed.length == 2;
+        case MoveDataReq.Position:
+            return pressed.length == 1;
+        case MoveDataReq.Nothing:
+            return pressed.length == 0;
+        }
     }
     errorHandler(err: MoveError | null) {
         if (err)
             console.error(`Move request returned an error with code ${err.error_name}: ${err.description}`);
     } 
-    onCellSelected(cell: Vector2 | null) {
-        switch(this.getRequirements()) {
-            case MoveDataReq.Nothing: {
-                return this.sendMove();
-            }
-            case MoveDataReq.PositionDirection: {
-                if(!cell) return;
-                if(this.prevCell){
-                    let dir: Direction | null = this.getDirection(cell, this.prevCell);
-                    if(!dir) return;
-                    let prevCell = this.prevCell;
-                    this.prevCell = null;
-                    return this.sendMove(prevCell, dir);
-                } 
-                this.prevCell = cell;
-            } break;
-            case MoveDataReq.Position: {
-                if(!cell) return;
-                if(!this.verifyCell(cell)) return;
-                return this.sendMove(cell);
-            }
-        } 
-
-
+    makeMoveData(pressedCells: Vector2[], moveType: MoveType): MoveData {
+        let pos : Vector2 | undefined = undefined;
+        let dir : Direction | undefined = undefined;
+        switch(this.getRequirements(moveType)) {
+        case MoveDataReq.PositionDirection:
+            dir = this.getDirection(pressedCells[1], pressedCells[0])!;
+        case MoveDataReq.Position:
+            pos = pressedCells[0];
+            break;
+        }
+        return new MoveData(moveType, pos, dir);
     }
-    getRequirements() {
-        switch(this.moveType){
+    getRequirements(mt: MoveType): MoveDataReq {
+        switch(mt) {
             case MoveType.Gun:
                 return MoveDataReq.PositionDirection;
             case MoveType.Walk:
-                case MoveType.Bomb:
+            case MoveType.Bomb:
                 return MoveDataReq.Position;
             case MoveType.Resign:
                 return MoveDataReq.Nothing;
         }
     }
-    async sendMove(pos?: Vector2, dir?: Direction) {
-        return network.move(new MoveData(this.moveType, pos, dir), account.ld.token!, game.sessionId!).then(this.errorHandler);
+    async sendMove(md: MoveData) {
+        return network.move(md, account.ld.token!, game.sessionId!).then(this.errorHandler);
     }
-    verifyCell(cell: Vector2) {
-        let tips = this.moveTips.getTips(this.matrix, this.moveType, this.player);
-        return tips.find((a: Vector2) => JSON.stringify(a) == JSON.stringify(cell));
-
-    }
-    getDirection(to: Vector2, from: Vector2): Direction | null {
+    private getDirection(to: Vector2, from: Vector2): Direction | null {
         let xs = to.x - from.x;
         let ys = to.y - from.y;
         if(xs == 0 && ys == -1) return Direction.Up; 

@@ -26,6 +26,7 @@ export class MatchScreen extends BaseScreen {
     gameUpdateNotifier!: StateUpdateNotifier;
     eventApplier!: EventApplier;
     buttonsManager!: ScreenButtonsManager;
+    moveTips!: MoveTips;
 
     constructor(redirectionMethod: RedirectionMethod) {
         super(redirectionMethod);
@@ -36,7 +37,6 @@ export class MatchScreen extends BaseScreen {
         this.gamelayer = new Layer(new GameViewport(canvas));
         this.layers = [this.gamelayer];
         let consts = await Network.network.gameConsts();
-        let moveTips = new MoveTips(consts);
         let ss = await Network.game.getSessionState();
         if (!ss) {
             console.log('unable to load session');
@@ -51,8 +51,9 @@ export class MatchScreen extends BaseScreen {
         this.gridManager.recalculate(this.gamelayer.viewport);
         this.matrixDrawer = new MatrixDrawer(this.gridManager, this.matrix);
         this.gridClickRecorder = new GridClickRecorder(this.gridManager);
-        this.moveTipsDrawer = new MoveTipsDrawer(moveTips, this.matrix, this.gridManager);
-        this.moveManager = new MoveManager(this.matrix, moveTips);
+        this.moveManager = new MoveManager();
+        this.moveTips = new MoveTips(this.matrix, consts, this.moveManager);
+        this.moveTipsDrawer = new MoveTipsDrawer(this.moveTips, this.gridManager);
         this.gameUpdateNotifier = new StateUpdateNotifier(this.matrix, (gs: GameState) => this.redirectionMethod(gs));
         this.eventApplier = new EventApplier(this.matrix);
         this.subscribeDependencies();
@@ -62,12 +63,9 @@ export class MatchScreen extends BaseScreen {
         this.gamelayer.subscribeDraw(this.matrixDrawer);
         this.gamelayer.subscribeDraw(this.moveTipsDrawer);
         this.gamelayer.subscribeClick(this.gridClickRecorder);
-        this.gridClickRecorder.subscribe((p: Vector2 | null) => this.moveManager.onCellSelected(p));
-        this.buttonsManager.subscribe((mt: MoveType) => this.moveTipsDrawer.notifyMoveType(mt));
-        this.buttonsManager.subscribe((mt: MoveType) => this.moveManager.onMoveTypeChanged(mt));
+        this.gridClickRecorder.subscribe((p: Vector2 | null) => this.moveTips.onCellSelected(p));
+        this.buttonsManager.subscribe((mt: MoveType) => this.moveTips.onMoveTypeChanged(mt));
         this.gameUpdateNotifier.subscribe((el: EventList) => 
             {this.eventApplier.onEventListCaptured(el);});
-        this.gameUpdateNotifier.subscribe((_: EventList) => 
-            {this.moveTipsDrawer.notifyCurrentPlayerChanged();});
     }
 }
