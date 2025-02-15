@@ -67,5 +67,7 @@ export class MatchScreen extends BaseScreen {
         this.buttonsManager.subscribe((mt: MoveType) => this.moveTips.onMoveTypeChanged(mt));
         this.gameUpdateNotifier.subscribe((el: EventList) => 
             {this.eventApplier.onEventListCaptured(el);});
+        this.gameUpdateNotifier.subscribe((_: EventList) => 
+            {this.moveTips.onMoveReceived();});
     }
 }

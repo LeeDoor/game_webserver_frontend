@@ -38,13 +38,12 @@ export class MoveTips {
         this.update();
     }
     onCellSelected(cell: Vector2 | null) {
-        if(!cell || this.validate(cell)) {
-            this.cellHistory = [];
-            return;
-        }
-        this.cellHistory.push(cell);
-        if(this.moveManager.tryMove(this.cellHistory, this.moveType)) {
-            this.cellHistory = [];
+        if(this.validate(cell)) {
+            if (cell) 
+                this.cellHistory.push(cell);
+            if(this.moveManager.tryMove(this.cellHistory, this.moveType)) {
+                this.cellHistory = [];
+            }
         }
         this.update();
     }
@@ -53,25 +52,37 @@ export class MoveTips {
         this.cellHistory = [];
         this.update();
     }
-    validate(cell: Vector2) {
-        return this.tips.indexOf(cell) > -1;
+    onMoveReceived() {
+        this.update();
+    }
+    validate(cell: Vector2 | null) {
+        return this.tips.length == 0 || cell && this.tips.find((c) => JSON.stringify(c) == JSON.stringify(cell));
     }
     update(player = this.player){
-        let cellSpread: CellSpread = this.getCellSpread(this.moveType);
-        let distance: number = this.getDistance(this.moveType);
-        let fromX = Math.max(0, player.position.x - distance);
-        let toX = Math.min(player.position.x + distance + 1, this.matrix.map_size.width);
-        let fromY = Math.max(0, player.position.y - distance);
-        let toY = Math.min(player.position.y + distance + 1, this.matrix.map_size.height);
+        this.tips = [];
+        if(player.login != this.matrix.now_turn) {
+            this.cellHistory = [];
+            return;
+        }
+        let cellSpread: CellSpread = this.getCellSpread();
+        let distance: number = this.getDistance();
+        let fromCell: Vector2 = this.cellHistory.length > 0 ? 
+            this.cellHistory[this.cellHistory.length - 1] : 
+            player.position; 
+        let fromX = Math.max(0, fromCell.x - distance);
+        let toX = Math.min(fromCell.x + distance + 1, this.matrix.map_size.width);
+        let fromY = Math.max(0, fromCell.y - distance);
+        let toY = Math.min(fromCell.y + distance + 1, this.matrix.map_size.height);
         switch(cellSpread) {
             case CellSpread.Axial: {
                 for(let i = fromX; i < toX; ++i) {
-                    if(this.matrix.matrix[i][player.position.y].length == 0){
-                        this.tips.push(new Vector2(i, player.position.y));
+                    let cell = new Vector2(i, fromCell.y);
+                    if(this.matchRestrictions(cell)){
+                        this.tips.push(cell);
                     }
                 }
                 for(let i = fromY; i < toY; ++i) {
-                    let cell = new Vector2(player.position.x, i); 
+                    let cell = new Vector2(fromCell.x, i); 
                     if(this.matchRestrictions(cell))
                         this.tips.push(cell);
                 }
@@ -92,7 +103,8 @@ export class MoveTips {
     private matchRestrictions(cell: Vector2): boolean {
         switch(this.moveType) {
             case MoveType.Gun:
-                if(this.cellHistory.length > 1) return true;
+                if(this.cellHistory.length == 1) 
+                    return JSON.stringify(cell) != JSON.stringify(this.cellHistory[0]);
             case MoveType.Walk:
             case MoveType.Bomb:
                 return this.matrix.matrix[cell.x][cell.y].length == 0;
@@ -100,10 +112,10 @@ export class MoveTips {
                 return true;
         }
     }
-    private getCellSpread(mt: MoveType): CellSpread {
-        switch(mt) {
+    private getCellSpread(): CellSpread {
+        switch(this.moveType) {
             case MoveType.Gun:
-                if(this.cellHistory.length > 1) return CellSpread.Axial;
+                if(this.cellHistory.length == 1) return CellSpread.Axial;
             case MoveType.Bomb:
                 return CellSpread.Square;
             case MoveType.Walk:
@@ -112,10 +124,10 @@ export class MoveTips {
                 return CellSpread.None;
         }
     }
-    private getDistance(mt: MoveType): number {
-        switch(mt) {
+    private getDistance(): number {
+        switch(this.moveType) {
             case MoveType.Gun:
-                if(this.cellHistory.length > 1) return 1;
+                if(this.cellHistory.length == 1) return 1;
                 return this.gc.gun_place_radius;
             case MoveType.Bomb:
                 return this.gc.bomb_place_radius;
